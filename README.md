@@ -1,6 +1,6 @@
 # SocialLinker
 
-SocialLinker is able to generate the most needed share links for you. You should use generated links, instead of the share buttons provided by the platforms themselves, to protect your user's privacy, and this gem makes it easy for you to do so.
+SocialLinker is able to generate the most common share links for you, without depending on JavaScript. You should use generated links, instead of the share buttons provided by the platforms themselves, to protect your user's privacy, and this gem makes it easy for you to do so.
 
 ## Installation
 
@@ -40,7 +40,7 @@ Which will deliver you the following url:
 
 Or to save you the copy-paste:
 
-[TestMailLink](mailto:mailto:emailaddress?subject=Example%20website&body=Example.com%20is%20the%20typical%20URL%20you%20would%20want%20to%20use%20in%20explanations%20anyway.%0A%0Ahttp%3A%2F%2Fexample.com%2F)
+[TestMailLink](mailto:emailaddress?subject=Example%20website&body=Example.com%20is%20the%20typical%20URL%20you%20would%20want%20to%20use%20in%20explanations%20anyway.%0A%0Ahttp%3A%2F%2Fexample.com%2F)
 
 The supported options are:
 
