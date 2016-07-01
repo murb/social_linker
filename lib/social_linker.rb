@@ -73,8 +73,8 @@ module SocialLinker
       @options[:url] = @options[:media] unless @options[:url]
 
       unless @options[:status]
-        hash_string = hashtag_string(@options[:tags])
-        max_length = (hash_string ? hash_string.length : 0) + 12 + 4 #hashstring + url length (shortened) + spaces
+        hash_string = @options[:tags] ? hashtag_string(@options[:tags][0..2]) : ""
+        max_length = 140 - ((hash_string ? hash_string.length : 0) + 12 + 4) #hashstring + url length (shortened) + spaces
         @options[:status] = "#{quote_string(strip_string(@options[:title],max_length))} #{@options[:url]} #{hash_string}"
       end
 
