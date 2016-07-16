@@ -3,7 +3,13 @@ require "erb"
 include ERB::Util
 
 module SocialLinker
+
+  # The main class of SocialLinker is the `SocialLinker::Subject`-class.
   class Subject
+
+    # Constant defining how the different share-url's look like and their parameters;
+    # the parameters can be set in the options directly, or will be derived from more
+    # generic options
     SHARE_TEMPLATES = {
       email: {
         base: "mailto:emailaddress?",
@@ -32,6 +38,10 @@ module SocialLinker
 
     }
 
+    # convert an array of strings to a Twitter-like hashtag-string
+    #
+    # @param [Array] tags to be converted to string
+    # @return [String] containing a Twitter-style tag-list
     def hashtag_string(tags)
       string = (tags and tags.count > 0) ? "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}" : nil
       if string and string.length > 60
@@ -40,10 +50,47 @@ module SocialLinker
       string
     end
 
+    # default url accessor
+    #
+    # @return String with url
+    def url
+      @options[:url]
+    end
+
+    # default title accessor
+    # @return String with title
+    def title
+      @options[:title]
+    end
+
+    # default summary accessor
+    # @return String with summary
+    def summary
+      @options[:summary]
+    end
+
+    # default media accessor
+    # @return String with media-url
+    def media
+      @options[:media]
+    end
+
+    # default tags accessor
+    # @return Array<String> with tags
+    def tags
+      @options[:media]
+    end
+
+    # puts quotes around a string
+    # @return [String] now with quotes.
     def quote_string(string)
       "“#{string}”" if string and string.to_s.strip != ""
     end
 
+    # strips a string to the max length taking into account quoting
+    # @param [String] string that is about to be shortened
+    # @param [Integer] max_length of the string to be shortened (default 100)
+    # @return [String] shortened to the max lenght
     def strip_string(string, max_length=100)
       if string and string.length > max_length
         elipsis = "…"
@@ -103,14 +150,30 @@ module SocialLinker
       @options
     end
 
+    # Generates a share link for each of the predefined platforms in the `SHARE_TEMPLATES` constant
+    #
+    # @param [Symbol] platform to generate the link for
     def share_link(platform)
       share_options = SHARE_TEMPLATES[platform]
+      raise "No share template defined" unless share_options
       params = options.keys & share_options[:params]
       if params.include?(:description) and !params.include?(:title)
         @options[:description] = @options[:title]
       end
 
       return share_options[:base]+params.collect{|k| "#{k}=#{url_encode(options[k])}"}.join('&')
+    end
+
+    # Catches method missing and tries to resolve them in either an appropriate share link or option value
+    def method_missing(m,*args)
+      share_link_matcher = m.to_s.match(/([a-z]*)_share_link/)
+      if share_link_matcher
+        return share_link(share_link_matcher[1].to_sym)
+      elsif options[m]
+        return options[m]
+      else
+        super
+      end
     end
   end
 end

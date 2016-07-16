@@ -106,6 +106,25 @@ describe SocialLinker do
     end
   end
 
+  describe '#method_missing' do
+    describe 'but looks like a share method' do
+      it 'should generate a share link' do
+        slb = SocialLinker::Subject.new(url: "a")
+        expect(slb.twitter_share_link).to eq("https://twitter.com/home?status=a")
+      end
+    end
+    describe 'might be an option value' do
+      it 'should return the option value if it is an option value' do
+        slb = SocialLinker::Subject.new(curl: "a")
+        expect(slb.curl).to eq("a")
+      end
+      it 'should raise NoMethodError when it is not an option value (and not a share link)' do
+        slb = SocialLinker::Subject.new(curl: "a")
+        expect{slb.cfurl}.to raise_error(NoMethodError)
+      end
+    end
+  end
+
 
 
 end
