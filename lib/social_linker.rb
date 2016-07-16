@@ -56,12 +56,15 @@ module SocialLinker
       string
     end
 
+    # Initialize the SocialLinker::Subject
+    #
     # options accepts:
     # * tags
     # * url
     # * title
     # * image_url
-
+    #
+    # @params [hash] options as defined above
     def initialize(options={})
       @options = options
       @options[:u] = @options[:url] unless options[:u]
@@ -93,6 +96,9 @@ module SocialLinker
       end
     end
 
+    # Returns the given options, extended with the (derived) defaults
+    #
+    # @return Hash with the options
     def options
       @options
     end
