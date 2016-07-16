@@ -78,7 +78,7 @@ module SocialLinker
     # default tags accessor
     # @return Array<String> with tags
     def tags
-      @options[:media]
+      @options[:tags]
     end
 
     # puts quotes around a string
