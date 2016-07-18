@@ -31,9 +31,21 @@ module SocialLinker
         base: "https://twitter.com/home?",
         params: [:status]
       },
+      twitter_native: {
+        base: "twitter://post?",
+        params: [:message]
+      },
       facebook: {
         base: "https://www.facebook.com/sharer/sharer.php?",
         params: [:u]
+      },
+      facebook_native: {
+        base: "fb://publish/profile/me?",
+        params: [:text]
+      },
+      whatsapp: {
+        base: "whatsapp://send?",
+        params: [:text]
       }
 
     }
@@ -121,13 +133,13 @@ module SocialLinker
       @options[:description] = @options[:title] unless @options[:description]
       @options[:subject] = @options[:title] unless @options[:subject]
       @options[:url] = @options[:media] unless @options[:url]
-
+      @options[:text] = "#{@options[:title]} #{@options[:url]}" unless @options[:text] #facebook & whatsapp native
       unless @options[:status]
         hash_string = @options[:tags] ? hashtag_string(@options[:tags][0..2]) : ""
         max_length = 140 - ((hash_string ? hash_string.length : 0) + 12 + 4) #hashstring + url length (shortened) + spaces
         @options[:status] = "#{quote_string(strip_string(@options[:title],max_length))} #{@options[:url]} #{hash_string}"
       end
-
+      @options[:message] = @options[:status] unless @options[:message]
       unless @options[:body]
         @options[:body] = ""
         @options[:body] += "#{@options[:summary]}\n" if @options[:summary]
