@@ -17,7 +17,7 @@ module SocialLinker
       },
       pinterest: {
         base: "https://pinterest.com/pin/create/button/?",
-        params: [:url, :media, :description]
+        params: {url: :url, media: :media, description: :title}
       },
       linkedin: {
         base: "https://www.linkedin.com/shareArticle?mini=true&",
@@ -28,8 +28,8 @@ module SocialLinker
         params: [:url]
       },
       twitter: {
-        base: "https://twitter.com/home?",
-        params: [:status]
+        base: "https://twitter.com/intent/tweet?",
+        params: {text: :title, via: :via, url: :url, hashtags: :hashtags}
       },
       twitter_native: {
         base: "twitter://post?",
@@ -93,6 +93,10 @@ module SocialLinker
       @options[:tags]
     end
 
+    def hashtags
+      @options[:hashtags]
+    end
+
     # puts quotes around a string
     # @return [String] now with quotes.
     def quote_string(string)
@@ -132,10 +136,12 @@ module SocialLinker
       @options[:title] = "#{ strip_string(@options[:summary], 120) }" unless options[:title]
       @options[:description] = @options[:title] unless @options[:description]
       @options[:subject] = @options[:title] unless @options[:subject]
+      @options[:via] = @options[:twitter_username] unless @options[:via]
       @options[:url] = @options[:media] unless @options[:url]
       @options[:text] = "#{@options[:title]} #{@options[:url]}" unless @options[:text] #facebook & whatsapp native
+      @options[:hashtags] = @options[:tags][0..1].join(",") if @options[:tags] and !@options[:hashtags]
       unless @options[:status]
-        hash_string = @options[:tags] ? hashtag_string(@options[:tags][0..2]) : ""
+        hash_string = @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
         max_length = 140 - ((hash_string ? hash_string.length : 0) + 12 + 4) #hashstring + url length (shortened) + spaces
         @options[:status] = "#{quote_string(strip_string(@options[:title],max_length))} #{@options[:url]} #{hash_string}"
       end
@@ -168,12 +174,14 @@ module SocialLinker
     def share_link(platform)
       share_options = SHARE_TEMPLATES[platform]
       raise "No share template defined" unless share_options
-      params = options.keys & share_options[:params]
-      if params.include?(:description) and !params.include?(:title)
-        @options[:description] = @options[:title]
+
+      url_params = {}
+      share_options[:params].each do |k,v|
+        value_key = v||k #smartassery; v = nil for arrays
+        url_params[k] = options[value_key] if options[value_key] and options[value_key].to_s.strip != ""
       end
 
-      return share_options[:base]+params.collect{|k| "#{k}=#{url_encode(options[k])}"}.join('&')
+      return share_options[:base]+url_params.collect{|k,v| "#{k}=#{url_encode(v)}"}.join('&')
     end
 
     # Catches method missing and tries to resolve them in either an appropriate share link or option value

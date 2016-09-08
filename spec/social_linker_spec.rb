@@ -80,12 +80,12 @@ describe SocialLinker do
       end
       it 'should work for :twitter' do
         # https://www.facebook.com/sharer/sharer.php?u=http%3A//example.com
-        slb = SocialLinker::Subject.new(url: "a")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/home?status=a")
-        slb = SocialLinker::Subject.new(url: "a", title: "Mooi recept")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/home?status=%E2%80%9CMooi%20recept%E2%80%9D%20a")
-        slb = SocialLinker::Subject.new(url: "a", title: "Mooi recept", tags: [:recept], email: "github@murb.nl")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/home?status=%E2%80%9CMooi%20recept%E2%80%9D%20a%20%23recept")
+        slb = SocialLinker::Subject.new(url: "https://murb.nl")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?url=https%3A%2F%2Fmurb.nl")
+        slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Mooi recept")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=Mooi%20recept&url=https%3A%2F%2Fmurb.nl")
+        slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Well done", tags: [:recept], email: "github@murb.nl")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=Well%20done&url=https%3A%2F%2Fmurb.nl&hashtags=recept")
       end
       it 'should work for :email' do
         slb = SocialLinker::Subject.new(url: "a", title: "Mooi recept", description: "Met een heerlijke saus!")
@@ -96,7 +96,7 @@ describe SocialLinker do
       end
       it 'should work for :pinterest' do
         slb = SocialLinker::Subject.new(media: "img", url: "url", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:pinterest)).to eq("https://pinterest.com/pin/create/button/?media=img&url=url&description=Mooi%20recept")
+        expect(slb.share_link(:pinterest)).to eq("https://pinterest.com/pin/create/button/?url=url&media=img&description=Mooi%20recept")
       end
       it 'should work for :google' do
         slb = SocialLinker::Subject.new(media: "img", url: "url", title: "Mooi recept", description: "Met een heerlijke saus!")
@@ -110,7 +110,7 @@ describe SocialLinker do
     describe 'but looks like a share method' do
       it 'should generate a share link' do
         slb = SocialLinker::Subject.new(url: "a")
-        expect(slb.twitter_share_link).to eq("https://twitter.com/home?status=a")
+        expect(slb.twitter_share_link).to eq("https://twitter.com/intent/tweet?url=a")
       end
     end
     describe 'might be an option value' do
