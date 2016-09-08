@@ -67,7 +67,7 @@ I've tried to map them as good as possible to the different share tools. Sometim
 
 To conclude: a very complete instantiation:
 
-    subject = SocialLinker::Subject.new(
+    @subject = SocialLinker::Subject.new(
       title: "title",
       url: "https://murb.nl/blog",
       image_url: "https://murb.nl/image.jpg",
@@ -85,12 +85,11 @@ When using Ruby on Rails a few helpers have been created.
 
 Just set the following, which should give you a reasonable default.
 
-    options = {
+    header_meta_tags(@subject, {
       site_title_postfix: "your sitename" # optional
-    }
-    header_meta_tags(subject,options)
+    })
 
-
+### Share links
 
 ## TODO
 
