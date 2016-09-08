@@ -1,8 +1,8 @@
 require 'social_linker/view_helpers'
 module SocialLinker
   class Railtie < Rails::Railtie
-    initializer "social_linker.view_helpers" do
-      ActionView::Base.send :include, ViewHelpers
+    ActiveSupport.on_load(:active_record) do
+      include SocialLinker::ViewHelpers
     end
   end
 end

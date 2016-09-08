@@ -84,7 +84,7 @@ module SocialLinker
     # default tags accessor
     # @return Array<String> with tags
     def tags
-      @options[:tags]
+      @options[:tags] ? @options[:tags] : []
     end
 
     def hashtags
@@ -119,12 +119,13 @@ module SocialLinker
     # * tags
     # * url
     # * title
-    # * image_url
+    # * image_url & image_type(image/jpeg, image/png)
     #
-    # @params [hash] options as defined above
+    # @params [Hash] options as defined above
     def initialize(options={})
       @options = options
       @options[:u] = @options[:url] unless options[:u]
+      @options[:media] = @options[:image_url] unless options[:media]
       @options[:description] = @options[:summary] unless options[:description]
       @options[:summary] = @options[:description] unless options[:summary]
       @options[:title] = "#{ strip_string(@options[:summary], 120) }" unless options[:title]
@@ -150,6 +151,7 @@ module SocialLinker
         @options[:body] += "\n\n#{hashtag_string(@options[:tags])}" if @options[:tags]
         @options[:body] = nil if @options[:body].strip == ""
       end
+      @options[:domain] = @options[:url].split(/\//)[0..2].join("/") if @options[:url] and !@options[:domain]
 
       @options.each do |k,v|
         @options[k] = v.strip if v and v.is_a? String
@@ -192,3 +194,4 @@ module SocialLinker
     end
   end
 end
+

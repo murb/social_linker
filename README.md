@@ -65,6 +65,33 @@ The supported options are:
 
 I've tried to map them as good as possible to the different share tools. Sometimes by combining several values. You may also pass along link-specific parameters such as `:hashtags`, so no 2-tag long string is generated from the list of tags.
 
+To conclude: a very complete instantiation:
+
+    subject = SocialLinker::Subject.new(
+      title: "title",
+      url: "https://murb.nl/blog",
+      image_url: "https://murb.nl/image.jpg",
+      image_type: 'image/jpeg',
+      summary: "short summary",
+      tags: ["key1", "key2", "key3"],
+      twitter_username: 'murb'
+    )
+
+## Rails helpers
+
+When using Ruby on Rails a few helpers have been created.
+
+### OpenGraph, Twitter, and HTML meta-data:
+
+Just set the following, which should give you a reasonable default.
+
+    options = {
+      site_title_postfix: "your sitename" # optional
+    }
+    header_meta_tags(subject,options)
+
+
+
 ## TODO
 
 * Render helpers (including SVG icons)
