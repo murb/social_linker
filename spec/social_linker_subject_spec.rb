@@ -83,9 +83,9 @@ describe SocialLinker do
         slb = SocialLinker::Subject.new(url: "https://murb.nl")
         expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?url=https%3A%2F%2Fmurb.nl")
         slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Mooi recept")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=Mooi%20recept&url=https%3A%2F%2Fmurb.nl")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=%E2%80%9CMooi%20recept%E2%80%9D&url=https%3A%2F%2Fmurb.nl")
         slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Well done", tags: [:recept], email: "github@murb.nl")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=Well%20done&url=https%3A%2F%2Fmurb.nl&hashtags=recept")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=%E2%80%9CWell%20done%E2%80%9D&url=https%3A%2F%2Fmurb.nl&hashtags=recept")
       end
       it 'should work for :email' do
         slb = SocialLinker::Subject.new(url: "a", title: "Mooi recept", description: "Met een heerlijke saus!")
