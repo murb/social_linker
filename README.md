@@ -1,6 +1,12 @@
 # SocialLinker
 
-SocialLinker is able to generate the most common share links for you, without depending on JavaScript. You should use generated links, instead of the share buttons provided by the platforms themselves, to protect your user's privacy, and this gem makes it easy for you to do so.
+SocialLinker is able to generate the most common share links for you, without depending on JavaScript.
+You should use generated links, instead of the share buttons provided by the platforms themselves, to
+protect your user's privacy, and this gem makes it easy for you to do so.
+
+SocialLinker also solves the tedious job to get the meta tags right. Because when you've set the SocialLinker::Subject
+correctly, you've also got the right ingredients for the perfect meta keywords & description, open graph variables
+etc.
 
 ## Installation
 

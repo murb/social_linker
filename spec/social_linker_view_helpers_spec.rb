@@ -33,8 +33,6 @@ describe SocialLinker do
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog",
-          image_url: "https://murb.nl/image.jpg",
-          image_type: 'image/jpeg',
           summary: "short summary",
           tags: ["key1", "key2"],
           twitter_username: 'murb'
@@ -49,9 +47,6 @@ describe SocialLinker do
 <meta name="description" content="short summary" />
 <meta name="twitter:description" content="short summary" />
 <meta property="og:description" content="short summary" />
-<meta name="twitter:image:src" content="https://murb.nl/image.jpg" />
-<meta property="og:image" content="https://murb.nl/image.jpg" />
-<meta property="og:image:type" content="image/jpeg" />
 <title>title</title>
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />'
@@ -68,7 +63,7 @@ describe SocialLinker do
         options = {
           site_title_postfix: "murb.nl"
         }
-        expected_result = '<meta name="twitter:card" content="summary" />
+        expected_result = '<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="murb" />
 <meta name="twitter:creator" content="murb" />
 <meta name="twitter:domain" content="https://murb.nl" />

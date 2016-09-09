@@ -26,7 +26,7 @@ module SocialLinker
       if subject
         domain = options[:domain] || subject.options[:domain]
 
-        header_html << meta_tag("twitter:card", :summary)
+        header_html << meta_tag("twitter:card", subject.media ? :summary_large_image : :summary)
         header_html << meta_tag("twitter:site", subject.options[:twitter_username])
         header_html << meta_tag("twitter:creator", subject.options[:twitter_username])
         header_html << meta_tag("twitter:domain", domain)
