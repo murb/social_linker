@@ -1,7 +1,7 @@
 require "social_linker/version"
 require "social_linker/subject"
 require 'social_linker/railtie' if defined?(Rails)
-require "ERB"
+# require "ERB"
 # include ERB::Util
 #
 # module SocialLinker
