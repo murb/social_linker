@@ -25,11 +25,11 @@ describe SocialLinker do
       end
     end
 
-    describe "render_social_linker_header_tags" do
+    describe "header_meta_tags" do
       it "should do basic tags when empty" do
-        expect(SimulatedActionView.new.render_social_linker_header_tags(nil,{})).to eq("<title></title>")
+        expect(SimulatedActionView.new.header_meta_tags(nil,{})).to eq("<title></title>")
         subject = SocialLinker::Subject.new
-        expect(SimulatedActionView.new.render_social_linker_header_tags(subject,{})).to eq("<meta name=\"twitter:card\" content=\"summary\" />\n<title></title>")
+        expect(SimulatedActionView.new.header_meta_tags(subject,{})).to eq("<meta name=\"twitter:card\" content=\"summary\" />\n<title></title>")
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog",
@@ -55,7 +55,7 @@ describe SocialLinker do
 <title>title</title>
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />'
-        expect(SimulatedActionView.new.render_social_linker_header_tags(subject,{})).to eq(expected_result)
+        expect(SimulatedActionView.new.header_meta_tags(subject,{})).to eq(expected_result)
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog",
@@ -84,7 +84,7 @@ describe SocialLinker do
 <title>title - murb.nl</title>
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />'
-        expect(SimulatedActionView.new.render_social_linker_header_tags(subject,options)).to eq(expected_result)
+        expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
 
       end
     end
