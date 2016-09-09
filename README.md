@@ -4,9 +4,9 @@ SocialLinker is able to generate the most common share links for you, without de
 You should use generated links, instead of the share buttons provided by the platforms themselves, to
 protect your user's privacy, and this gem makes it easy for you to do so.
 
-SocialLinker also solves the tedious job to get the meta tags right. Because when you've set the SocialLinker::Subject
-correctly, you've also got the right ingredients for the perfect meta keywords & description, open graph variables
-etc.
+And when using Rails, SocialLinker also solves the tedious job of getting the meta tags right.
+Because once you've set the SocialLinker::Subject correctly, you've also got the right ingredients
+for the perfect meta keywords & description, open graph variables etc.
 
 ## Installation
 
@@ -101,8 +101,8 @@ Just set the following, which should give you a reasonable default.
 
 ## TODO
 
-* Render helpers (including SVG icons)
-** later include even javascript timeout workarounds ( have to dive into http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled )
+* Render sharelink helpers (including SVG icons)
+** maybe include even javascript timeout workarounds ( have to dive into http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled )
 
 ## Development
 
