@@ -24,8 +24,8 @@ module SocialLinker
         header_html << meta_tag("twitter:domain", domain)
 
         if subject.url
-          header_html << meta_tag("og:url", subject.url)
-          header_html << "<link rel=\"canonical\" content=\"#{h(subject.url)}\" />"
+          header_html << meta_tag("og:url", subject.canonical_url)
+          header_html << "<link rel=\"canonical\" content=\"#{h(subject.canonical_url)}\" />"
         end
 
         header_html << meta_tag("keywords", subject.tags.join(" "))

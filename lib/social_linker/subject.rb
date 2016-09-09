@@ -63,6 +63,14 @@ module SocialLinker
       @options[:url]
     end
 
+    def utm_parameters
+      [nil, true].include?(@options[:utm_parameters]) ? true : false
+    end
+
+    def canonical_url
+      @options[:canonical_url]
+    end
+
     # default title accessor
     # @return String with title
     def title
@@ -120,9 +128,14 @@ module SocialLinker
     # * url
     # * title
     # * image_url & image_type(image/jpeg, image/png)
+    # * ... and more often medium specific attributes...
+    #
+    # Note by default tracking parameters are added, turn this off by passing
+    # `utm_parameters: false`
     #
     # @params [Hash] options as defined above
     def initialize(options={})
+      # basic option syncing
       @options = options
       @options[:u] = @options[:url] unless options[:u]
       @options[:media] = @options[:image_url] unless options[:media]
@@ -134,6 +147,21 @@ module SocialLinker
       @options[:via] = @options[:twitter_username] unless @options[:via]
       @options[:url] = @options[:media] unless @options[:url]
       @options[:text] = "#{@options[:title]} #{@options[:url]}" unless @options[:text] #facebook & whatsapp native
+      @options[:canonical_url] = @options[:url]
+      if @options[:url] and utm_parameters
+        unless @options[:url].match /utm_source/
+          combine_with = @options[:url].match(/\?/) ? "&" : "?"
+          @options[:url] = "#{@options[:url]}#{combine_with}utm_source=<%=share_source%>"
+        end
+        unless @options[:url].match /utm_medium/
+          combine_with = "&"
+          @options[:url] = "#{@options[:url]}#{combine_with}utm_medium=share_link"
+        end
+        unless @options[:url].match /utm_campaign/
+          combine_with = "&"
+          @options[:url] = "#{@options[:url]}#{combine_with}utm_campaign=social"
+        end
+      end
       @options[:hashtags] = @options[:tags][0..1].join(",") if @options[:tags] and !@options[:hashtags]
       @options[:hash_string] = @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
       unless @options[:tweet_text]
@@ -175,7 +203,11 @@ module SocialLinker
       url_params = {}
       share_options[:params].each do |k,v|
         value_key = v||k #smartassery; v = nil for arrays
-        url_params[k] = options[value_key] if options[value_key] and options[value_key].to_s.strip != ""
+        value = options[value_key]
+        if value and value.to_s.strip != ""
+          value = value.gsub('<%=share_source%>', platform.to_s)
+          url_params[k] = value
+        end
       end
 
       return share_options[:base]+url_params.collect{|k,v| "#{k}=#{url_encode(v)}"}.join('&')

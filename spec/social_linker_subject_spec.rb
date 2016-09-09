@@ -55,7 +55,7 @@ describe SocialLinker do
     it 'generates nice defaults' do
       slb = SocialLinker::Subject.new(url: "a")
       expect(slb.options[:u]).to eq("a")
-      expect(slb.options[:status]).to eq("a")
+      expect(slb.options[:status]).to eq("a?utm_source=<%=share_source%>&utm_medium=share_link&utm_campaign=social")
     end
   end
 
@@ -81,26 +81,26 @@ describe SocialLinker do
       it 'should work for :twitter' do
         # https://www.facebook.com/sharer/sharer.php?u=http%3A//example.com
         slb = SocialLinker::Subject.new(url: "https://murb.nl")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?url=https%3A%2F%2Fmurb.nl")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?url=https%3A%2F%2Fmurb.nl%3Futm_source%3Dtwitter%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
         slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Mooi recept")
-        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=%E2%80%9CMooi%20recept%E2%80%9D&url=https%3A%2F%2Fmurb.nl")
-        slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Well done", tags: [:recept], email: "github@murb.nl")
+        expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=%E2%80%9CMooi%20recept%E2%80%9D&url=https%3A%2F%2Fmurb.nl%3Futm_source%3Dtwitter%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
+        slb = SocialLinker::Subject.new(url: "https://murb.nl", title: "Well done", tags: [:recept], email: "github@murb.nl", utm_parameters: false)
         expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=%E2%80%9CWell%20done%E2%80%9D&url=https%3A%2F%2Fmurb.nl&hashtags=recept")
       end
       it 'should work for :email' do
         slb = SocialLinker::Subject.new(url: "a", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:email)).to eq("mailto:emailaddress?subject=Mooi%20recept&body=Met%20een%20heerlijke%20saus%21%0A%0Aa")
-        social_linker_subject = SocialLinker::Subject.new(media: "http://example.com/img.jpg", url: "http://example.com/", title: "Example website", description: "Example.com description")
+        expect(slb.share_link(:email)).to eq("mailto:emailaddress?subject=Mooi%20recept&body=Met%20een%20heerlijke%20saus%21%0A%0Aa%3Futm_source%3Demail%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
+        social_linker_subject = SocialLinker::Subject.new(media: "http://example.com/img.jpg", url: "http://example.com/", title: "Example website", description: "Example.com description", utm_parameters: false)
         expect(social_linker_subject.share_link(:email)).to eq("mailto:emailaddress?subject=Example%20website&body=Example.com%20description%0A%0Ahttp%3A%2F%2Fexample.com%2F%0A%0Ahttp%3A%2F%2Fexample.com%2Fimg.jpg")
 
       end
       it 'should work for :pinterest' do
         slb = SocialLinker::Subject.new(media: "img", url: "url", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:pinterest)).to eq("https://pinterest.com/pin/create/button/?url=url&media=img&description=Mooi%20recept")
+        expect(slb.share_link(:pinterest)).to eq("https://pinterest.com/pin/create/button/?url=url%3Futm_source%3Dpinterest%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial&media=img&description=Mooi%20recept")
       end
       it 'should work for :google' do
         slb = SocialLinker::Subject.new(media: "img", url: "url", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:google)).to eq("https://plus.google.com/share?url=url")
+        expect(slb.share_link(:google)).to eq("https://plus.google.com/share?url=url%3Futm_source%3Dgoogle%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
       end
 
     end
@@ -110,7 +110,7 @@ describe SocialLinker do
     describe 'but looks like a share method' do
       it 'should generate a share link' do
         slb = SocialLinker::Subject.new(url: "a")
-        expect(slb.twitter_share_link).to eq("https://twitter.com/intent/tweet?url=a")
+        expect(slb.twitter_share_link).to eq("https://twitter.com/intent/tweet?url=a%3Futm_source%3Dtwitter%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
       end
     end
     describe 'might be an option value' do

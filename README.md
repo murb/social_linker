@@ -77,6 +77,10 @@ To conclude: a very complete instantiation:
       twitter_username: 'murb'
     )
 
+## UTM Campaign parameters
+
+By default [utm campaign parameters](https://support.google.com/analytics/answer/1033863?hl=en) are added when they are not present. You can turn this off by passing the option: `utm_parameters: false`.
+
 ## Rails helpers
 
 When using Ruby on Rails a few helpers have been created.
@@ -89,14 +93,10 @@ Just set the following, which should give you a reasonable default.
       site_title_postfix: "your sitename" # optional
     })
 
-### Share links
-
 ## TODO
 
 * Render helpers (including SVG icons)
 ** later include even javascript timeout workarounds ( have to dive into http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled )
-* Create a helper to render header meta tags with proper opengraph and twitter data
-* Automatically add some basic utm tracking data to the urls https://support.google.com/analytics/answer/1033863?hl=en
 
 ## Development
 
