@@ -5,8 +5,8 @@ module SocialLinker
     # param [String, Symbol] content (the value for the name or the property)
     # @returns [String, nil] nil is returned when the content is empty
     def meta_tag(name, content)
-      name_or_property_section = name.start_with?("og:") ? "property=\"#{h(name)}\"" : "name=\"#{h(name)}\""
-      "<meta #{name_or_property_section} content=\"#{h(content)}\" />" if content and content != ""
+      name_or_property_section = name.start_with?("og:") ? "property=\"#{ERB::Util.h(name)}\"" : "name=\"#{ERB::Util.h(name)}\""
+      "<meta #{name_or_property_section} content=\"#{ERB::Util.h(content)}\" />" if content and content != ""
     end
 
     # render_social_linker_header_tags renders the most important metatags based on the SocialLinker::Subject
@@ -25,7 +25,7 @@ module SocialLinker
 
         if subject.url
           header_html << meta_tag("og:url", subject.canonical_url)
-          header_html << "<link rel=\"canonical\" content=\"#{h(subject.canonical_url)}\" />"
+          header_html << "<link rel=\"canonical\" content=\"#{ERB::Util.h(subject.canonical_url)}\" />"
         end
 
         header_html << meta_tag("keywords", subject.tags.join(" "))

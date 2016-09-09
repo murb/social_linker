@@ -213,6 +213,10 @@ module SocialLinker
       return share_options[:base]+url_params.collect{|k,v| "#{k}=#{url_encode(v)}"}.join('&')
     end
 
+    def url_encode(v)
+      ERB::Util.url_encode(v)
+    end
+
     # Catches method missing and tries to resolve them in either an appropriate share link or option value
     def method_missing(m,*args)
       share_link_matcher = m.to_s.match(/([a-z]*)_share_link/)
