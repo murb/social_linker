@@ -50,13 +50,22 @@ module SocialLinker
     # @return [String] containing a Twitter-style tag-list
     def hashtag_string(tags)
       if tags and tags.count > 0
-        tags = tags.collect{|a| a.match(/\s/) ? a.split(/\s/).collect{|a| a.capitalize}.join("") : a}
+        tags = tags.collect{|a| camelize_tag_when_needed(a) }
         string = "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}"
         if string and string.length > 60
           puts "WARNING: string of tags longer than adviced lenght of 60 characters: #{string}"
         end
         string
       end
+    end
+
+    # single world tags don't need any processing, but tags consisting of different words do (before they can use in hashtags following convention)
+    #
+    # @param [String] tag to might need conversion
+    # @return [String] fixed tag
+    def camelize_tag_when_needed(tag)
+      tag = tag.to_s
+      tag.match(/\s/) ? tag.split(/\s/).collect{|a| a.capitalize}.join("") : tag
     end
 
     # default url accessor
@@ -165,8 +174,11 @@ module SocialLinker
           @options[:url] = "#{@options[:url]}#{combine_with}utm_campaign=social"
         end
       end
-      @options[:hashtags] = @options[:tags][0..1].join(",") if @options[:tags] and !@options[:hashtags]
-      @options[:hash_string] = @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
+      if @options[:tags]
+        @options[:tags].compact!
+        @options[:hashtags] = @options[:tags][0..1].collect{|a| camelize_tag_when_needed(a) }.join(",") if @options[:tags] and !@options[:hashtags]
+        @options[:hash_string] = @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
+      end
       unless @options[:tweet_text]
         max_length = 140 - ((@options[:hash_string] ? @options[:hash_string].length : 0) + 12 + 4) #hashstring + url length (shortened) + spaces
         @options[:tweet_text] = "#{quote_string(strip_string(@options[:title],max_length))}"

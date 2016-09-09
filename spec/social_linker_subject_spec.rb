@@ -56,6 +56,17 @@ describe SocialLinker do
     end
   end
 
+  describe '#camelize_tag_when_needed' do
+    it 'should not camelize single words' do
+      slb = SocialLinker::Subject.new
+      expect(slb.camelize_tag_when_needed("aaaa")).to eq("aaaa")
+    end
+    it 'should  camelize two words' do
+      slb = SocialLinker::Subject.new
+      expect(slb.camelize_tag_when_needed("aaaa bbb")).to eq("AaaaBbb")
+    end
+  end
+
   describe '#initialize' do
     it 'generates nice defaults' do
       slb = SocialLinker::Subject.new(url: "a")
