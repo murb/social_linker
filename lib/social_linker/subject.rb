@@ -49,11 +49,14 @@ module SocialLinker
     # @param [Array] tags to be converted to string
     # @return [String] containing a Twitter-style tag-list
     def hashtag_string(tags)
-      string = (tags and tags.count > 0) ? "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}" : nil
-      if string and string.length > 60
-        puts "WARNING: string of tags longer than adviced lenght of 60 characters: #{string}"
+      if tags and tags.count > 0
+        tags = tags.collect{|a| a.match(/\s/) ? a.split(/\s/).collect{|a| a.capitalize}.join("") : a}
+        string = "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}"
+        if string and string.length > 60
+          puts "WARNING: string of tags longer than adviced lenght of 60 characters: #{string}"
+        end
+        string
       end
-      string
     end
 
     # default url accessor

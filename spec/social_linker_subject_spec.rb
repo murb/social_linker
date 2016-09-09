@@ -38,6 +38,11 @@ describe SocialLinker do
       slb = SocialLinker::Subject.new
       expect(slb.hashtag_string([:a, :b])).to eq("#a #b")
     end
+    it 'deals with spaces in tags' do
+      slb = SocialLinker::Subject.new
+      expect(slb.hashtag_string(["abc alphabet", "b"])).to eq("#AbcAlphabet #b")
+      expect(slb.hashtag_string(["#a", "#b"])).to eq("#a #b")
+    end
   end
 
   describe '#quote_string' do
