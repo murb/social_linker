@@ -1,5 +1,7 @@
 # SocialLinker
 
+[![Build Status](https://travis-ci.org/murb/social_linker.svg?branch=master)](https://travis-ci.org/murb/social_linker)
+
 SocialLinker is able to generate the most common share links for you, without depending on JavaScript.
 You should use generated links, instead of the share buttons provided by the platforms themselves, to
 protect your user's privacy, and this gem makes it easy for you to do so.
@@ -102,7 +104,8 @@ Just set the following, which should give you a reasonable default.
 ## TODO
 
 * Render sharelink helpers (including SVG icons)
-** maybe include even javascript timeout workarounds ( have to dive into http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled )
+* [Further improvement] include even [javascript timeout workarounds](http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled)
+* More share methods!
 
 ## Development
 
