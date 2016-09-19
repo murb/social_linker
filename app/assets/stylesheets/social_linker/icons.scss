@@ -1,0 +1,51 @@
+.icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	fill: currentColor;
+  &:hover {
+    opacity: 0.8
+  };
+  &.icon-default-style {
+    fill: #000;
+  }
+}
+
+/* =======================================================================================
+Example showing how to change the color/size of the icons:
+.icon-name {
+	font-size: 32px; // works because "width" & "height" were set using em units
+	color: red; // works for single-colored icons, because "fill" was set to "currentColor"
+}
+======================================================================================== */
+
+.icon-google {
+	width: 0.83984375em;
+}
+
+.icon-sticky-note-o {
+	width: 0.857421875em;
+}
+
+.icon-share-square-o {
+	width: 0.9287109375em;
+}
+
+.icon-search {
+	width: 0.9287109375em;
+}
+
+.icon-twitter {
+	width: 0.9287109375em;
+  &.default-style {
+    color: #000;
+  }
+}
+
+.icon-pinterest {
+	width: 0.857421875em;
+}
+
+.icon-facebook {
+	width: 0.857421875em;
+}

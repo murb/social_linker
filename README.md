@@ -101,11 +101,48 @@ Just set the following, which should give you a reasonable default.
       site_title_postfix: "your sitename" # optional
     })
 
+### Link helper with SVG icons
+
+Use the following to create a sharelink to Facebook
+
+    social_link_to @subject, :facebook
+
+This results in a simple `<a href>` containing the share link and an svg image.
+This SVG image may or may not be found depending on your asset initialization,
+make sure that config/initializers/assets.rb contains the following line:
+
+    Rails.application.config.assets.precompile += %w( social_linker/icons.svg )
+
+(if you don't it probably will be suggested to you by Rails)
+
+If you want to change the content of the link, pass a block, e.g.:
+
+    social_link_to @subject, :facebook do
+      "Share on Facebook!"
+    end
+
+To make sure that the icons align well, make sure to include the styling, include
+the following line to the head of your application.ccs file:
+
+    *= require social_linker/icons
+
+#### Tip: SVG4Everyone
+
+When using SVG and serving your pages to older browsers, make sure you use something
+like SVG4Everyone. Include in your gemfile:
+
+    source 'https://rails-assets.org' do
+     gem 'rails-assets-svg4everybody'
+    end
+
+and include the following line to the head of your `application.js` file:
+
+    //= require svg4everybody
+
 ## TODO
 
-* Render sharelink helpers (including SVG icons)
-* [Further improvement] include even [javascript timeout workarounds](http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled)
-* More share methods!
+* Idea: maybe improve share helpers with [javascript timeout workarounds](http://stackoverflow.com/questions/7231085/how-to-fall-back-to-marketplace-when-android-custom-url-scheme-not-handled) for native alternatives (although Twitter and facebook work well)
+* More share methods (pull request welcome)
 
 ## Development
 

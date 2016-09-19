@@ -83,7 +83,38 @@ describe SocialLinker do
 
       end
     end
+    describe "#social_link_to_image" do
+      it "should return nil if no network or image path is given" do
+        expect(SimulatedActionView.new.social_link_to_image(nil,nil)).to eq(nil)
+      end
+      it "should return an svg" do
+        expect(SimulatedActionView.new.social_link_to_image(:facebook,"svg_path")).to eq("<svg class=\"icon icon-facebook icon-default-style\"><use xlink:href=\"svg_path#icon-facebook\"></use></svg>")
+      end
+    end
 
+    describe "#social_link_to" do
+      it "should return an error when no subject is given" do
+        expect{
+          SimulatedActionView.new.social_link_to(nil,nil)
+        }.to raise_error(ArgumentError)
+      end
+      it "should return an error when no network is given" do
+        subject = SocialLinker::Subject.new(
+          title: "title",
+          url: "https://murb.nl/blog"
+        )
+        expect{
+          SimulatedActionView.new.social_link_to(subject,nil)
+        }.to raise_error(ArgumentError)
+      end
+      it "should return return a share link" do
+        subject = SocialLinker::Subject.new(
+          title: "title",
+          url: "https://murb.nl/blog"
+        )
+        expect(SimulatedActionView.new.social_link_to(subject,:facebook)).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+      end
+    end
   end
 
 
