@@ -38,10 +38,10 @@ module ViewHelpers
       end
 
       header_html << meta_tag("keywords", subject.tags.join(" "))
-      header_html << meta_tag("description", subject.summary)
+      header_html << meta_tag("description", subject.summary(true))
 
-      header_html << meta_tag("twitter:description", subject.summary)
-      header_html << meta_tag("og:description", subject.summary)
+      header_html << meta_tag("twitter:description", subject.summary(true))
+      header_html << meta_tag("og:description", subject.summary(true))
 
       if subject.media
         header_html << meta_tag("twitter:image:src", subject.media)

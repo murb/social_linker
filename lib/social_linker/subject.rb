@@ -91,8 +91,8 @@ module SocialLinker
 
     # default summary accessor
     # @return String with summary
-    def summary
-      @options[:summary]
+    def summary(strip=false)
+      strip ? strip_string(@options[:summary], 300) : @options[:summary]
     end
 
     # default media accessor
@@ -158,8 +158,12 @@ module SocialLinker
       @options[:subject] = @options[:title] unless @options[:subject]
       @options[:via] = @options[:twitter_username] unless @options[:via]
       @options[:url] = @options[:media] unless @options[:url]
+      raise ArgumentError, "#{url} is not a valid url" if @options[:url] and !@options[:url].include?('//')
+
       @options[:text] = "#{@options[:title]} #{@options[:url]}" unless @options[:text] #facebook & whatsapp native
       @options[:canonical_url] = @options[:url]
+      @options[:domain] = @options[:url].split(/\//)[0..2].join("/") if @options[:url] and !@options[:domain]
+
       if @options[:url] and utm_parameters
         unless @options[:url].match /utm_source/
           combine_with = @options[:url].match(/\?/) ? "&" : "?"
@@ -194,11 +198,27 @@ module SocialLinker
         @options[:body] += "\n\n#{hashtag_string(@options[:tags])}" if @options[:tags]
         @options[:body] = nil if @options[:body].strip == ""
       end
-      @options[:domain] = @options[:url].split(/\//)[0..2].join("/") if @options[:url] and !@options[:domain]
+
+      @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
+      @options[:media] = prefix_domain(@options[:media],@options[:domain])
 
       @options.each do |k,v|
         @options[k] = v.strip if v and v.is_a? String
       end
+    end
+
+    # It is assumed that paths are relative to the domainname if none is given
+    # @param [String] path to file (if it is already a full url, it will be passed along)
+    # @param [String] domain of the file
+    # @return String with full url
+    def prefix_domain path, domain
+      return_string = path
+      if path and !path.include?("//")
+        path.gsub!(/^\//,'')
+        domain.gsub!(/\/$/,'')
+        return_string = [domain,path].join("/")
+      end
+      return_string
     end
 
     # Returns the given options, extended with the (derived) defaults

@@ -69,9 +69,27 @@ describe SocialLinker do
 
   describe '#initialize' do
     it 'generates nice defaults' do
-      slb = SocialLinker::Subject.new(url: "a")
-      expect(slb.options[:u]).to eq("a")
-      expect(slb.options[:status]).to eq("a?utm_source=<%=share_source%>&utm_medium=share_link&utm_campaign=social")
+      slb = SocialLinker::Subject.new(url: "http://example.com")
+      expect(slb.options[:u]).to eq("http://example.com")
+      expect(slb.options[:status]).to eq("http://example.com?utm_source=<%=share_source%>&utm_medium=share_link&utm_campaign=social")
+    end
+  end
+
+  describe "#prefix_domain" do
+    before(:example) do
+      @slb = SocialLinker::Subject.new
+    end
+
+    it 'should not touch full urls' do
+      expect(@slb.prefix_domain("http://example.com/image.jpg", "https://example.com")).to eq("http://example.com/image.jpg")
+    end
+
+    it 'should not not generate double slashes' do
+      expect(@slb.prefix_domain("/image.jpg", "https://example.com/")).to eq("https://example.com/image.jpg")
+    end
+
+    it 'should add slash when needed' do
+      expect(@slb.prefix_domain("image.jpg", "https://example.com")).to eq("https://example.com/image.jpg")
     end
   end
 
@@ -84,15 +102,14 @@ describe SocialLinker do
     it 'should urlencode values' do
       slb = SocialLinker::Subject.new(url: "http://example.com")
       expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com")
-
     end
 
 
     describe 'platforms' do
       it 'should work for :facebook' do
         # https://www.facebook.com/sharer/sharer.php?u=http%3A//example.com
-        slb = SocialLinker::Subject.new(url: "a")
-        expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=a")
+        slb = SocialLinker::Subject.new(url: "http://example.com")
+        expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com")
       end
       it 'should work for :twitter' do
         # https://www.facebook.com/sharer/sharer.php?u=http%3A//example.com
@@ -104,19 +121,19 @@ describe SocialLinker do
         expect(slb.share_link(:twitter)).to eq("https://twitter.com/intent/tweet?text=%E2%80%9CWell%20done%E2%80%9D&url=https%3A%2F%2Fmurb.nl&hashtags=recept")
       end
       it 'should work for :email' do
-        slb = SocialLinker::Subject.new(url: "a", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:email)).to eq("mailto:emailaddress?subject=Mooi%20recept&body=Met%20een%20heerlijke%20saus%21%0A%0Aa%3Futm_source%3Demail%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
+        slb = SocialLinker::Subject.new(url: "http://example.com", title: "Mooi recept", description: "Met een heerlijke saus!")
+        expect(slb.share_link(:email)).to eq("mailto:emailaddress?subject=Mooi%20recept&body=Met%20een%20heerlijke%20saus%21%0A%0Ahttp%3A%2F%2Fexample.com%3Futm_source%3Demail%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
         social_linker_subject = SocialLinker::Subject.new(media: "http://example.com/img.jpg", url: "http://example.com/", title: "Example website", description: "Example.com description", utm_parameters: false)
         expect(social_linker_subject.share_link(:email)).to eq("mailto:emailaddress?subject=Example%20website&body=Example.com%20description%0A%0Ahttp%3A%2F%2Fexample.com%2F%0A%0Ahttp%3A%2F%2Fexample.com%2Fimg.jpg")
 
       end
       it 'should work for :pinterest' do
-        slb = SocialLinker::Subject.new(media: "img", url: "url", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:pinterest)).to eq("https://pinterest.com/pin/create/button/?url=url%3Futm_source%3Dpinterest%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial&media=img&description=Mooi%20recept")
+        slb = SocialLinker::Subject.new(media: "img", url: "http://example.com", title: "Mooi recept", description: "Met een heerlijke saus!")
+        expect(slb.share_link(:pinterest)).to eq("https://pinterest.com/pin/create/button/?url=http%3A%2F%2Fexample.com%3Futm_source%3Dpinterest%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial&media=http%3A%2F%2Fexample.com%2Fimg&description=Mooi%20recept")
       end
       it 'should work for :google' do
-        slb = SocialLinker::Subject.new(media: "img", url: "url", title: "Mooi recept", description: "Met een heerlijke saus!")
-        expect(slb.share_link(:google)).to eq("https://plus.google.com/share?url=url%3Futm_source%3Dgoogle%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
+        slb = SocialLinker::Subject.new(media: "img", url: "http://example.com", title: "Mooi recept", description: "Met een heerlijke saus!")
+        expect(slb.share_link(:google)).to eq("https://plus.google.com/share?url=http%3A%2F%2Fexample.com%3Futm_source%3Dgoogle%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
       end
 
     end
@@ -125,19 +142,45 @@ describe SocialLinker do
   describe '#method_missing' do
     describe 'but looks like a share method' do
       it 'should generate a share link' do
-        slb = SocialLinker::Subject.new(url: "a")
-        expect(slb.twitter_share_link).to eq("https://twitter.com/intent/tweet?url=a%3Futm_source%3Dtwitter%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
+        slb = SocialLinker::Subject.new(url: "http://example.com")
+        expect(slb.twitter_share_link).to eq("https://twitter.com/intent/tweet?url=http%3A%2F%2Fexample.com%3Futm_source%3Dtwitter%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
       end
     end
     describe 'might be an option value' do
       it 'should return the option value if it is an option value' do
-        slb = SocialLinker::Subject.new(curl: "a")
-        expect(slb.curl).to eq("a")
+        slb = SocialLinker::Subject.new(curl: "http://example.com")
+        expect(slb.curl).to eq("http://example.com")
       end
       it 'should raise NoMethodError when it is not an option value (and not a share link)' do
-        slb = SocialLinker::Subject.new(curl: "a")
+        slb = SocialLinker::Subject.new(curl: "http://example.com")
         expect{slb.cfurl}.to raise_error(NoMethodError)
       end
+    end
+  end
+
+  describe "#description" do
+    it "should return description" do
+      slb = SocialLinker::Subject.new(description: "abc", url: "http://g.to")
+      expect(slb.description).to eq("abc")
+    end
+    it "should return description" do
+      long_string = 100.times.collect{|a| "abcd a"}.join("")
+      slb = SocialLinker::Subject.new(description: long_string, url: "http://g.to")
+      expect(slb.description).to eq(long_string)
+    end
+
+  end
+
+  describe "#summary" do
+    it "should return description" do
+      long_string = 100.times.collect{|a| "abcd a"}.join("")
+      slb = SocialLinker::Subject.new(description: long_string, url: "http://g.to")
+      expect(slb.summary).to eq(long_string)
+    end
+    it "should return description" do
+      long_string = 100.times.collect{|a| "abcd a"}.join("")
+      slb = SocialLinker::Subject.new(description: long_string, url: "http://g.to")
+      expect(slb.summary(true)).to eq("abcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd …")
     end
   end
 
