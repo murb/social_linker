@@ -42,7 +42,7 @@ describe SocialLinker do
 <meta name="twitter:creator" content="murb" />
 <meta name="twitter:domain" content="https://murb.nl" />
 <meta property="og:url" content="https://murb.nl/blog" />
-<link rel="canonical" content="https://murb.nl/blog" />
+<link rel="canonical" href="https://murb.nl/blog" />
 <meta name="keywords" content="key1 key2" />
 <meta name="description" content="short summary" />
 <meta name="twitter:description" content="short summary" />
@@ -68,7 +68,7 @@ describe SocialLinker do
 <meta name="twitter:creator" content="murb" />
 <meta name="twitter:domain" content="https://murb.nl" />
 <meta property="og:url" content="https://murb.nl/blog" />
-<link rel="canonical" content="https://murb.nl/blog" />
+<link rel="canonical" href="https://murb.nl/blog" />
 <meta name="keywords" content="key1 key2" />
 <meta name="description" content="short summary" />
 <meta name="twitter:description" content="short summary" />
