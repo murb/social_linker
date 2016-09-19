@@ -1,4 +1,4 @@
-module SocialLinker
+# module SocialLinker
   module ViewHelpers
     # renders a metatag
     # param [String, Symbol] name (or property) (defaults to name, values starting with 'og:' (opengraph) will be using the property attribute)
@@ -61,5 +61,11 @@ module SocialLinker
 
     end
 
+    def social_link_to subject, network, options = {}
+
+      return "<a href=\"#{subject.share_link(network)}\" title=#{network}></a>"
+
+    end
+
   end
-end
+# end

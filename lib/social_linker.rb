@@ -1,11 +1,11 @@
 require "social_linker/version"
 require "social_linker/subject"
-require 'social_linker/railtie' if defined?(Rails)
-# require "ERB"
-# include ERB::Util
+require 'social_linker/engine' if defined?(Rails)
+
+# SocialLinker
 #
-# module SocialLinker
-#
-#   # The main class of SocialLinker is the `SocialLinker::Subject`-class.
-#
-# end
+# The SocialLinker namespace contains The SocialLinker::Subject and the
+# SocialSubject::Engine (for Rails projects)
+module SocialLinker
+  # The main class of SocialLinker is the `SocialLinker::Subject`-class.
+end

@@ -1,15 +1,15 @@
 require 'spec_helper'
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'social_linker/view_helpers'
+$LOAD_PATH.unshift File.expand_path('../../app', __FILE__)
+require 'helpers/view_helpers'
 
 class SimulatedActionView
-  include SocialLinker::ViewHelpers
+  include ViewHelpers
 end
 
 
 
 describe SocialLinker do
-  describe SocialLinker::ViewHelpers do
+  describe ViewHelpers do
     describe "#meta_tag" do
       it "should not render when content is empty" do
         expect(SimulatedActionView.new.meta_tag("a", nil)).to eq(nil)
