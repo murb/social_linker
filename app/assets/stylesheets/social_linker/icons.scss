@@ -19,9 +19,6 @@ Example showing how to change the color/size of the icons:
 }
 ======================================================================================== */
 
-.icon-google {
-	width: 0.83984375em;
-}
 
 .icon-sticky-note-o {
 	width: 0.857421875em;
@@ -37,15 +34,25 @@ Example showing how to change the color/size of the icons:
 
 .icon-twitter {
 	width: 0.9287109375em;
-  &.default-style {
-    color: #000;
-  }
 }
 
-.icon-pinterest {
+.icon-pinterest  {
 	width: 0.857421875em;
 }
 
 .icon-facebook {
 	width: 0.857421875em;
+}
+
+.icon-google {
+	width: 0.83984375em;
+}
+.icon-linkedin {
+  width: 0.857421875em;
+}
+.icon-whatsapp {
+  width: 0.857421875em;
+}
+.icon-tumblr {
+  width: 0.609375em;
 }
