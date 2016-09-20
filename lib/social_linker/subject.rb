@@ -140,6 +140,9 @@ module SocialLinker
     # * url
     # * title
     # * image_url & image_type(image/jpeg, image/png)
+    # * description
+    # * facebook_app_id
+    # * twitter_username
     # * ... and more often medium specific attributes...
     #
     # Note by default tracking parameters are added, turn this off by passing
@@ -149,6 +152,7 @@ module SocialLinker
     def initialize(options={})
       # basic option syncing
       @options = options
+      @options[:facebook_app_id] = @options[:facebook_app_id]
       @options[:u] = @options[:url] unless options[:u]
       @options[:media] = @options[:image_url] unless options[:media]
       @options[:description] = @options[:summary] unless options[:description]
@@ -189,6 +193,12 @@ module SocialLinker
       end
       @options[:message] = [@options[:tweet_text],@options[:url],@options[:hash_string]].compact.join(" ") unless @options[:message]
       @options[:status] = @options[:message] unless @options[:status]
+
+      # make sure urls are absolute
+      @options[:url] = prefix_domain(@options[:url],@options[:domain])
+      @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
+      @options[:media] = prefix_domain(@options[:media],@options[:domain])
+
       unless @options[:body]
         @options[:body] = ""
         @options[:body] += "#{@options[:summary]}\n" if @options[:summary]
@@ -198,9 +208,6 @@ module SocialLinker
         @options[:body] += "\n\n#{hashtag_string(@options[:tags])}" if @options[:tags]
         @options[:body] = nil if @options[:body].strip == ""
       end
-
-      @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
-      @options[:media] = prefix_domain(@options[:media],@options[:domain])
 
       @options.each do |k,v|
         @options[k] = v.strip if v and v.is_a? String

@@ -78,7 +78,8 @@ describe SocialLinker do
 <meta property="og:image:type" content="image/jpeg" />
 <title>title - murb.nl</title>
 <meta name="twitter:title" content="title" />
-<meta property="og:title" content="title" />'
+<meta property="og:title" content="title" />
+<meta property="og:site_name" content="murb.nl" />'
         expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
 
       end

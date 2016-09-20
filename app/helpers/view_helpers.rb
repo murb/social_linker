@@ -4,8 +4,10 @@ module ViewHelpers
   # param [String, Symbol] content (the value for the name or the property)
   # @returns [String, nil] nil is returned when the content is empty
   def meta_tag(name, content)
-    name_or_property_section = name.start_with?("og:") ? "property=\"#{erb_sanitized(name)}\"" : "name=\"#{erb_sanitized(name)}\""
-    "<meta #{name_or_property_section} content=\"#{erb_sanitized(content)}\" />" if content and content != ""
+    content = erb_sanitized(content)
+    name = erb_sanitized(name)
+    name_or_property_attribute = (name.start_with?("og:") or name.start_with?("fb:")) ? "property" : "name"
+    "<meta #{name_or_property_attribute}=\"#{name}\" content=\"#{content}\" />" if content and content.to_s.strip != ""
   end
 
   def erb_sanitized(value)
@@ -43,6 +45,8 @@ module ViewHelpers
       header_html << meta_tag("twitter:description", subject.summary(true))
       header_html << meta_tag("og:description", subject.summary(true))
 
+      header_html << meta_tag("fb:app_id", subject.options[:facebook_app_id])
+
       if subject.media
         header_html << meta_tag("twitter:image:src", subject.media)
         header_html << meta_tag("og:image", subject.media)
@@ -56,6 +60,7 @@ module ViewHelpers
     header_html << "<title>#{erb_sanitized(site_title)}</title>"
     header_html << meta_tag("twitter:title", title)
     header_html << meta_tag("og:title", title)
+    header_html << meta_tag("og:site_name", site_title_postfix)
 
     header_html.compact!
     header_html = header_html.join("\n") if header_html
