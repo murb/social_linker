@@ -87,7 +87,8 @@ module ViewHelpers
     raise ArgumentError, "network can't be nil" unless network
     options_with_defaults = {
       social_icons_image_path: 'social_linker/icons.svg',
-      title: network.to_s.capitalize
+      title: network.to_s.capitalize,
+      target_blank: true
     }.merge(options)
 
     link_content = network
@@ -102,8 +103,8 @@ module ViewHelpers
     end
 
     title = options_with_defaults[:title]
-
-    html = "<a href=\"#{erb_sanitized(subject.share_link(network))}\" class=\"#{network}\" title=\"#{title}\">#{link_content}</a>"
+    targetblank = options_with_defaults[:target_blank] ? " target=\"_blank\"" : ""
+    html = "<a href=\"#{erb_sanitized(subject.share_link(network))}\"#{targetblank} class=\"#{network}\" title=\"#{title}\">#{link_content}</a>"
     html = html.html_safe if html.methods.include?(:html_safe)
     html
   end
