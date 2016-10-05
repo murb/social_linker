@@ -75,6 +75,10 @@ module SocialLinker
       @options[:url]
     end
 
+    def image_url
+      @options[:image_url]
+    end
+
     def utm_parameters
       [nil, true].include?(@options[:utm_parameters]) ? true : false
     end
