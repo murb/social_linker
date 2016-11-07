@@ -77,6 +77,10 @@ Example showing how to change the color/size of the icons:
 
 // Foundation/Bootstrap styles
 .btn, .button {
+  svg.icon {
+    float: left;
+    font-size: 1.15em;
+  }
   &.google {
     background-color: $google-color;
     color: #fff;
