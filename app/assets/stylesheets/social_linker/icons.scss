@@ -76,13 +76,22 @@ Example showing how to change the color/size of the icons:
   &.google {
     background-color: $google-color;
     color: #fff;
+    &:hover {
+      background-color: darken($google-color,10);
+    }
   }
   &.facebook {
     background-color: $facebook-color;
     color: #fff;
+    &:hover {
+      background-color: darken($facebook-color,10);
+    }
   }
   &.linkedin {
     background-color: $linkedin-color;
     color: #fff;
+    &:hover {
+      background-color: darken($linkedin-color,10);
+    }
   }
 }
