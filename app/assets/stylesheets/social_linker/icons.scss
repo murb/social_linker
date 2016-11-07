@@ -1,3 +1,7 @@
+$google-color: #E0492F;
+$facebook-color: #395697;
+$linkedin-color: #0077B5;
+
 .icon {
 	display: inline-block;
 	width: 1em;
@@ -42,17 +46,43 @@ Example showing how to change the color/size of the icons:
 
 .icon-facebook {
 	width: 0.857421875em;
+  .colored {
+    color: $facebook-color;
+  }
 }
 
 .icon-google {
 	width: 0.83984375em;
+  .colored {
+    color: $google-color;
+  }
 }
 .icon-linkedin {
   width: 0.857421875em;
+  .colored {
+    color: $linkedin-color;
+  }
 }
 .icon-whatsapp {
   width: 0.857421875em;
 }
 .icon-tumblr {
   width: 0.609375em;
+
+}
+
+// Foundation/Bootstrap styles
+.btn, .button {
+  &.google {
+    background-color: $google-color;
+    color: #fff;
+  }
+  &.facebook {
+    background-color: $facebook-color;
+    color: #fff;
+  }
+  &.linkedin {
+    background-color: $linkedin-color;
+    color: #fff;
+  }
 }
