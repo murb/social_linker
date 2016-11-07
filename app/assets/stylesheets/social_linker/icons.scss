@@ -1,6 +1,7 @@
 $google-color: #E0492F;
 $facebook-color: #395697;
 $linkedin-color: #0077B5;
+$twitter-color: #1DA1F2;
 
 .icon {
 	display: inline-block;
@@ -38,6 +39,9 @@ Example showing how to change the color/size of the icons:
 
 .icon-twitter {
 	width: 0.9287109375em;
+  .colored {
+    color: $twitter-color;
+  }
 }
 
 .icon-pinterest  {
@@ -85,6 +89,13 @@ Example showing how to change the color/size of the icons:
     color: #fff;
     &:hover {
       background-color: darken($facebook-color,10);
+    }
+  }
+  &.twitter {
+    background-color: $twitter-color;
+    color: #fff;
+    &:hover {
+      background-color: darken($twitter-color,10);
     }
   }
   &.linkedin {
