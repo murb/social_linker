@@ -126,6 +126,32 @@ the following line to the head of your application.ccs file:
 
     *= require social_linker/icons
 
+#### Reuse the SVG icons elsewhere
+
+When integrating social icons into your site, you might also want to include login options
+for these social networks, or access the icons for other reasons. Below is 'standard'
+example code of how to access image-assets in the icon
+
+    <svg class="icon icon-facebook-official">
+      <use xlink:href="<%=image_path('social_linker/icons.svg')%>#icon-facebook"></use>
+    </svg>
+
+Included layers:
+
+* ![icon-email](app/assets/images/social_linker/icons.svg#icon-email)
+* ![icon-google](app/assets/images/social_linker/icons.svg#icon-google)
+* ![icon-sticky-note-o](app/assets/images/social_linker/icons.svg#icon-sticky-note-o)
+* ![icon-share-square-o](app/assets/images/social_linker/icons.svg#icon-share-square-o)
+* ![icon-search](app/assets/images/social_linker/icons.svg#icon-search)
+* ![icon-heart-o](app/assets/images/social_linker/icons.svg#icon-heart-o)
+* ![icon-heart](app/assets/images/social_linker/icons.svg#icon-heart)
+* ![icon-twitter](app/assets/images/social_linker/icons.svg#icon-twitter)
+* ![icon-pinterest](app/assets/images/social_linker/icons.svg#icon-pinterest)
+* ![icon-facebook](app/assets/images/social_linker/icons.svg#icon-facebook)
+* ![icon-linkedin](app/assets/images/social_linker/icons.svg#icon-linkedin)
+* ![icon-whatsapp](app/assets/images/social_linker/icons.svg#icon-whatsapp)
+* ![icon-tumblr](app/assets/images/social_linker/icons.svg#icon-tumblr)
+
 #### Tip: SVG4Everyone
 
 When using SVG and serving your pages to older browsers, make sure you use something
