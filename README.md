@@ -138,19 +138,19 @@ example code of how to access image-assets in the icon
 
 Included layers:
 
-* icon-email: ![icon icon-email](app/assets/images/social_linker/icons.svg#icon-email)
-* icon-google: ![icon icon-google](app/assets/images/social_linker/icons.svg#icon-google)
-* icon-sticky-note-o: ![icon icon-sticky-note-o](app/assets/images/social_linker/icons.svg#icon-sticky-note-o)
-* icon-share-square-o: ![icon icon-share-square-o](app/assets/images/social_linker/icons.svg#icon-share-square-o)
-* icon-search: ![icon icon-search](app/assets/images/social_linker/icons.svg#icon-search)
-* icon-heart-o: ![icon icon-heart-o](app/assets/images/social_linker/icons.svg#icon-heart-o)
-* icon-heart: ![icon icon-heart](app/assets/images/social_linker/icons.svg#icon-heart)
-* icon-twitter: ![icon icon-twitter](app/assets/images/social_linker/icons.svg#icon-twitter)
-* icon-pinterest: ![icon icon-pinterest](app/assets/images/social_linker/icons.svg#icon-pinterest)
-* icon-facebook: ![icon icon-facebook](app/assets/images/social_linker/icons.svg#icon-facebook)
-* icon-linkedin: ![icon icon-linkedin](app/assets/images/social_linker/icons.svg#icon-linkedin)
-* icon-whatsapp: ![icon icon-whatsapp](app/assets/images/social_linker/icons.svg#icon-whatsapp)
-* icon-tumblr: ![icon icon-tumblr](app/assets/images/social_linker/icons.svg#icon-tumblr)
+* icon-email
+* icon-google
+* icon-sticky-note-o
+* icon-share-square-o
+* icon-search
+* icon-heart-o
+* icon-heart
+* icon-twitter
+* icon-pinterest
+* icon-facebook
+* icon-linkedin
+* icon-whatsapp
+* icon-tumblr
 
 #### Tip: SVG4Everyone
 
