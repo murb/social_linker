@@ -51,11 +51,7 @@ module SocialLinker
     def hashtag_string(tags)
       if tags and tags.count > 0
         tags = tags.collect{|a| camelize_tag_when_needed(a) }
-        string = "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}"
-        if string and string.length > 60
-          puts "WARNING: string of tags longer than adviced lenght of 60 characters: #{string}"
-        end
-        string
+        "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}"
       end
     end
 
