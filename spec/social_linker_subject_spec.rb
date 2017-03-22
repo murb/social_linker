@@ -195,6 +195,11 @@ describe SocialLinker do
       slb.merge!({message: "cheese"})
       expect(slb.message).to eq("cheese")
     end
+    it "allows merging with another sociallinker subject" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
+      slb.merge!(SocialLinker::Subject.new(message: "cheese"))
+      expect(slb.message).to eq("cheese")
+    end
   end
 
 

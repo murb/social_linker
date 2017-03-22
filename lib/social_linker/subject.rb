@@ -171,8 +171,10 @@ module SocialLinker
     # Note by default tracking parameters are added, turn this off by passing
     # `utm_parameters: false`
     #
-    # @params [Hash] options as defined above
+    # @params [Hash, SocialLinker::Subject] options as defined above
+    # @return SocialLinker::Subject (self)
     def merge!(options)
+      options = options.options if options.is_a? SocialLinker::Subject
       @options.merge!(options)
       @options[:u] = @options[:url] unless @options[:u]
       @options[:media] = @options[:image_url] unless @options[:media]
@@ -216,6 +218,7 @@ module SocialLinker
       @options.each do |k,v|
         @options[k] = v.strip if v and v.is_a? String
       end
+      self
     end
 
     # Generates a large body of text (typical for email)
