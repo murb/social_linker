@@ -213,33 +213,38 @@ module SocialLinker
       @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
       @options[:media] = prefix_domain(@options[:media],@options[:domain])
 
-      unless @options[:body]
-        @options[:body] = ""
-        @options[:body] += "#{@options[:summary]}\n" if @options[:summary]
-        @options[:body] += "\n#{@options[:url]}\n" if @options[:url]
-        @options[:body] += "\n#{@options[:description]}\n" if @options[:summary] != @options[:description] and @options[:description]
-        @options[:body] += "\n#{@options[:media]}\n" if @options[:media] != @options[:url] and @options[:media]
-        @options[:body] += "\n\n#{hashtag_string(@options[:tags])}" if @options[:tags]
-        @options[:body] = nil if @options[:body].strip == ""
-      end
-
       @options.each do |k,v|
         @options[k] = v.strip if v and v.is_a? String
       end
+    end
+
+    # Generates a large body of text (typical for email)
+    # @return String
+    def body
+      return options[:body] if options[:body]
+      rv = ""
+      rv += "#{@options[:summary]}\n" if options[:summary]
+      rv += "\n#{@options[:url]}\n" if options[:url]
+      rv += "\n#{@options[:description]}\n" if options[:summary] != options[:description] and options[:description]
+      rv += "\n#{@options[:media]}\n" if options[:media] != options[:url] and options[:media]
+      rv += "\n\n#{hashtag_string(@options[:tags])}" if options[:tags]
+      rv.strip!
+      rv = nil if rv == ""
+      return rv
     end
 
     # Turns the first two tags in to tweetable hash tags
     # Conform recommendation never to have more than 2 tags in a twitter message
     # @return String with two tags as #tags.
     def twitter_hash_tags
-      @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
+      options[:tags] ? hashtag_string(options[:tags][0..1]) : ""
     end
 
     # Generatess the text to tweet (Twitter)
     # @return String with text to tweet
     def twitter_text
-      return @options[:twitter_text] if @options[:twitter_text]
-      return @options[:tweet_text] if @options[:tweet_text]
+      return options[:twitter_text] if options[:twitter_text]
+      return options[:tweet_text] if options[:tweet_text]
 
       max_length = 140 - (twitter_hash_tags.length + 12 + 4) #hashstring + url length (shortened) + spaces
       "#{quote_string(strip_string(@options[:title],max_length))}"
@@ -248,9 +253,9 @@ module SocialLinker
     # Generates a full twitter message includig url and hashtags
     # @return String with full twitter message (typically for native app)
     def twitter_text_with_url_and_hashags
-      return @options[:twitter_text_with_url_and_hashags] if @options[:twitter_text_with_url_and_hashags]
-      return @options[:message] if @options[:message]
-      return @options[:status] if @options[:status]
+      return options[:twitter_text_with_url_and_hashags] if options[:twitter_text_with_url_and_hashags]
+      return options[:message] if options[:message]
+      return options[:status] if options[:status]
       [twitter_text,twitter_hash_tags,url].delete_if{|a| a.nil? or a.empty?}.join(" ")
     end
     alias_method :status, :twitter_text_with_url_and_hashags
