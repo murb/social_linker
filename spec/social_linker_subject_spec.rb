@@ -71,7 +71,7 @@ describe SocialLinker do
     it 'generates nice defaults' do
       slb = SocialLinker::Subject.new(url: "http://example.com")
       expect(slb.options[:u]).to eq("http://example.com")
-      expect(slb.options[:status]).to eq("http://example.com?utm_source=<%=share_source%>&utm_medium=share_link&utm_campaign=social")
+      expect(slb.status).to eq("http://example.com?utm_source=<%=share_source%>&utm_medium=share_link&utm_campaign=social")
     end
   end
 
@@ -184,6 +184,18 @@ describe SocialLinker do
     end
   end
 
+  describe "#merge" do
+    it "should allow an empty set of values to be merged" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
+      slb.merge({})
+      expect(slb.message).to eq("kaas")
+    end
+    it "should allow values to be overwritten" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
+      slb.merge({message: "cheese"})
+      expect(slb.message).to eq("cheese")
+    end
+  end
 
 
 end

@@ -23,11 +23,11 @@ module SocialLinker
       },
       twitter: {
         base: "https://twitter.com/intent/tweet?",
-        params: {text: :tweet_text, via: :via, url: :url, hashtags: :hashtags}
+        params: {text: :twitter_text, via: :via, url: :url, hashtags: :hashtags}
       },
       twitter_native: {
         base: "twitter://post?",
-        params: [:message]
+        params: [message: :twitter_text_with_url_and_hashags]
       },
       facebook: {
         base: "https://www.facebook.com/sharer/sharer.php?",
@@ -151,13 +151,34 @@ module SocialLinker
     # @params [Hash] options as defined above
     def initialize(options={})
       # basic option syncing
-      @options = options
-      @options[:facebook_app_id] = @options[:facebook_app_id]
-      @options[:u] = @options[:url] unless options[:u]
-      @options[:media] = @options[:image_url] unless options[:media]
-      @options[:description] = @options[:summary] unless options[:description]
-      @options[:summary] = @options[:description] unless options[:summary]
-      @options[:title] = "#{ strip_string(@options[:summary], 120) }" unless options[:title]
+      @options = {}
+      self.merge(options)
+    end
+
+    # Merges existing SocialLinker::Subject with a (potentially limited set of)
+    # new options
+    #
+    # options accepts:
+    # * tags
+    # * url
+    # * title
+    # * image_url & image_type(image/jpeg, image/png)
+    # * description
+    # * facebook_app_id
+    # * twitter_username
+    # * ... and more often medium specific attributes...
+    #
+    # Note by default tracking parameters are added, turn this off by passing
+    # `utm_parameters: false`
+    #
+    # @params [Hash] options as defined above
+    def merge(options)
+      @options.merge!(options)
+      @options[:u] = @options[:url] unless @options[:u]
+      @options[:media] = @options[:image_url] unless @options[:media]
+      @options[:description] = @options[:summary] unless @options[:description]
+      @options[:summary] = @options[:description] unless @options[:summary]
+      @options[:title] = "#{ strip_string(@options[:summary], 120) }" unless @options[:title]
       @options[:description] = @options[:title] unless @options[:description]
       @options[:subject] = @options[:title] unless @options[:subject]
       @options[:via] = @options[:twitter_username] unless @options[:via]
@@ -185,14 +206,7 @@ module SocialLinker
       if @options[:tags]
         @options[:tags].compact!
         @options[:hashtags] = @options[:tags][0..1].collect{|a| camelize_tag_when_needed(a) }.join(",") if @options[:tags] and !@options[:hashtags]
-        @options[:hash_string] = @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
       end
-      unless @options[:tweet_text]
-        max_length = 140 - ((@options[:hash_string] ? @options[:hash_string].length : 0) + 12 + 4) #hashstring + url length (shortened) + spaces
-        @options[:tweet_text] = "#{quote_string(strip_string(@options[:title],max_length))}"
-      end
-      @options[:message] = [@options[:tweet_text],@options[:url],@options[:hash_string]].compact.join(" ") unless @options[:message]
-      @options[:status] = @options[:message] unless @options[:status]
 
       # make sure urls are absolute
       @options[:url] = prefix_domain(@options[:url],@options[:domain])
@@ -213,6 +227,33 @@ module SocialLinker
         @options[k] = v.strip if v and v.is_a? String
       end
     end
+
+    # Turns the first two tags in to tweetable hash tags
+    # Conform recommendation never to have more than 2 tags in a twitter message
+    # @return String with two tags as #tags.
+    def twitter_hash_tags
+      @options[:tags] ? hashtag_string(@options[:tags][0..1]) : ""
+    end
+
+    # Generatess the text to tweet (Twitter)
+    # @return String with text to tweet
+    def twitter_text
+      return @options[:twitter_text] if @options[:twitter_text]
+      return @options[:tweet_text] if @options[:tweet_text]
+
+      max_length = 140 - (twitter_hash_tags.length + 12 + 4) #hashstring + url length (shortened) + spaces
+      "#{quote_string(strip_string(@options[:title],max_length))}"
+    end
+
+    # Generates a full twitter message includig url and hashtags
+    # @return String with full twitter message (typically for native app)
+    def twitter_text_with_url_and_hashags
+      return @options[:twitter_text_with_url_and_hashags] if @options[:twitter_text_with_url_and_hashags]
+      return @options[:message] if @options[:message]
+      return @options[:status] if @options[:status]
+      [twitter_text,twitter_hash_tags,url].delete_if{|a| a.nil? or a.empty?}.join(" ")
+    end
+    alias_method :status, :twitter_text_with_url_and_hashags
 
     # It is assumed that paths are relative to the domainname if none is given
     # @param [String] path to file (if it is already a full url, it will be passed along)
@@ -246,6 +287,7 @@ module SocialLinker
       share_options[:params].each do |k,v|
         value_key = v||k #smartassery; v = nil for arrays
         value = options[value_key]
+        value = self.send(value_key) if self.methods.include?(value_key)
         if value and value.to_s.strip != ""
           value = value.gsub('<%=share_source%>', platform.to_s)
           url_params[k] = value
