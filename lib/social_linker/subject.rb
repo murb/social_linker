@@ -152,7 +152,7 @@ module SocialLinker
     def initialize(options={})
       # basic option syncing
       @options = {}
-      self.merge(options)
+      self.merge!(options)
     end
 
     # Merges existing SocialLinker::Subject with a (potentially limited set of)
@@ -172,7 +172,7 @@ module SocialLinker
     # `utm_parameters: false`
     #
     # @params [Hash] options as defined above
-    def merge(options)
+    def merge!(options)
       @options.merge!(options)
       @options[:u] = @options[:url] unless @options[:u]
       @options[:media] = @options[:image_url] unless @options[:media]

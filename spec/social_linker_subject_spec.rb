@@ -184,15 +184,15 @@ describe SocialLinker do
     end
   end
 
-  describe "#merge" do
+  describe "#merge!" do
     it "should allow an empty set of values to be merged" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
-      slb.merge({})
+      slb.merge!({})
       expect(slb.message).to eq("kaas")
     end
     it "should allow values to be overwritten" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
-      slb.merge({message: "cheese"})
+      slb.merge!({message: "cheese"})
       expect(slb.message).to eq("cheese")
     end
   end
