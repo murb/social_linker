@@ -76,9 +76,13 @@ module ViewHelpers
   # * social_icons_image_path (defaults to the default SocialLinker iconset)
   # * title (the title attribute, defaults to the network's name capitalized)
 
-  def social_link_to_image(network, image_path)
+  def social_link_to_image(network, image_path=nil)
+    if image_path == nil
+      image_path = image_path('social_linker/icons.svg') if self.methods.include?(:image_path)
+    end
+
     if network and image_path
-      "<svg class=\"icon icon-#{network} icon-default-style\"><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
+      "<svg class=\"icon icon-#{network} icon-default-style\"><title>#{network.capitalize}</title><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
     end
   end
 

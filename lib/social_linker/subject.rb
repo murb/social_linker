@@ -220,6 +220,7 @@ module SocialLinker
       end
       self
     end
+    alias_method :update, :merge!
 
     # Generates a large body of text (typical for email)
     # @return String
