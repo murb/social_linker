@@ -88,6 +88,20 @@ module ViewHelpers
     end
   end
 
+  # Generates the <a href> code for the subject and network
+  # By default it will use the #social_link_to_image - function, refer to
+  # that function if you don't see the icons rendered.
+  #
+  # Options:
+  # @param [SocialLinker::Subject] the SocialLinker::Subject initialized as complete as possible
+  # @param [Symbol] network key (e.g. twitter, facebook, see README and/or SocialLinker::Subject::SHARE_TEMPLATES )
+  # params [Hash] options:
+  #  * :social_icons_image_path (defaults to the default SocialLinker iconset)
+  #  * :title (the title attribute, defaults to the network's name capitalized)
+  #  * :target_blank (boolean whether it should open in a new window)
+  #  * :class (array or string of classes to add to the a-href element)
+  # @return String of html (possibly marked as sanitized when available)
+
   def social_link_to subject, network, options = {}
     raise ArgumentError, "subject can't be nil" unless subject
     raise ArgumentError, "network can't be nil" unless network
