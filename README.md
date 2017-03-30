@@ -136,6 +136,11 @@ example code of how to access image-assets in the icon
       <use xlink:href="<%=image_path('social_linker/icons.svg')%>#icon-facebook"></use>
     </svg>
 
+*Note:* If you just want the SVG icon standalone, you can also use the `social_link_to_image`
+view helper:
+
+    social_link_to_image :facebook
+
 Included layers:
 
 * icon-email

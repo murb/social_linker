@@ -82,7 +82,9 @@ module ViewHelpers
     end
 
     if network and image_path
-      "<svg class=\"icon icon-#{network} icon-default-style\"><title>#{network.capitalize}</title><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
+      html = "<svg class=\"icon icon-#{network} icon-default-style\"><title>#{network.capitalize}</title><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
+      html = html.html_safe if html.methods.include?(:html_safe)
+      html
     end
   end
 
@@ -92,7 +94,7 @@ module ViewHelpers
     options_with_defaults = {
       social_icons_image_path: 'social_linker/icons.svg',
       title: network.to_s.capitalize,
-      target_blank: true
+      target_blank: true,
     }.merge(options)
 
     link_content = network
@@ -107,8 +109,9 @@ module ViewHelpers
     end
 
     title = options_with_defaults[:title]
+    html_class = [options_with_defaults[:class], network].flatten.compact.join(" ")
     targetblank = options_with_defaults[:target_blank] ? " target=\"_blank\"" : ""
-    html = "<a href=\"#{erb_sanitized(subject.share_link(network))}\"#{targetblank} class=\"#{network}\" title=\"#{title}\">#{link_content}</a>"
+    html = "<a href=\"#{erb_sanitized(subject.share_link(network))}\"#{targetblank} class=\"#{html_class}\" title=\"#{title}\">#{link_content}</a>"
     html = html.html_safe if html.methods.include?(:html_safe)
     html
   end
