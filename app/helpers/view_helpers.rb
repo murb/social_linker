@@ -98,7 +98,7 @@ module ViewHelpers
     link_content = network
 
     if block_given?
-      link_content = block.call
+      link_content = capture(block)
     else
       social_icons_image_path = options_with_defaults[:social_icons_image_path]
       social_icons_image_path = image_path(social_icons_image_path) if self.methods.include?(:image_path)
