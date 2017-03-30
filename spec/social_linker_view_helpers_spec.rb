@@ -5,7 +5,7 @@ require 'helpers/view_helpers'
 class SimulatedActionView
   include ViewHelpers
   def capture string
-    string.call
+    string
   end
 end
 
