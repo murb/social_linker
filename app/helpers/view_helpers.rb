@@ -86,7 +86,7 @@ module ViewHelpers
     end
   end
 
-  def social_link_to subject, network, options = {}
+  def social_link_to subject, network, options = {}, &block
     raise ArgumentError, "subject can't be nil" unless subject
     raise ArgumentError, "network can't be nil" unless network
     options_with_defaults = {
@@ -98,7 +98,7 @@ module ViewHelpers
     link_content = network
 
     if block_given?
-      link_content = yield
+      link_content = block.call
     else
       social_icons_image_path = options_with_defaults[:social_icons_image_path]
       social_icons_image_path = image_path(social_icons_image_path) if self.methods.include?(:image_path)
