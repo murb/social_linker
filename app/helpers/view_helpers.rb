@@ -25,8 +25,16 @@ module ViewHelpers
   # @return String of tags (possibly marked as sanitized when available)
   def header_meta_tags subject, options={}
     site_title_postfix = options[:site_title_postfix]
+    site_name = options[:site_name] || site_title_postfix
     header_html = []
     if subject
+      site_name ||= subject.options[:site_name]
+      if subject.options[:render_site_title_postfix]
+        site_title_postfix ||= subject.options[:site_title_postfix]
+        site_name ||= site_title_postfix
+      else
+        site_title_postfix = nil
+      end
       domain = options[:domain] || subject.options[:domain]
 
       header_html << meta_tag("twitter:card", subject.media ? :summary_large_image : :summary)
@@ -60,7 +68,7 @@ module ViewHelpers
     header_html << "<title>#{erb_sanitized(site_title)}</title>"
     header_html << meta_tag("twitter:title", title)
     header_html << meta_tag("og:title", title)
-    header_html << meta_tag("og:site_name", site_title_postfix)
+    header_html << meta_tag("og:site_name", site_name)
 
     header_html.compact!
     header_html = header_html.join("\n") if header_html

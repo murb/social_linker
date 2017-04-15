@@ -86,6 +86,41 @@ describe SocialLinker do
         expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
 
       end
+      it "should hide postprefix if set to do so" do
+        subject = SocialLinker::Subject.new(
+          title: "title",
+          url: "https://murb.nl/blog",
+          render_site_title_postfix: false
+        )
+        options = {
+          site_title_postfix: "murb.nl"
+        }
+        expected_result = '<meta name="twitter:card" content="summary" />
+<meta name="twitter:domain" content="https://murb.nl" />
+<meta property="og:url" content="https://murb.nl/blog" />
+<link rel="canonical" href="https://murb.nl/blog" />
+<title>title</title>
+<meta name="twitter:title" content="title" />
+<meta property="og:title" content="title" />
+<meta property="og:site_name" content="murb.nl" />'
+        expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
+      end
+      it "should be able to set title postfix if set to do so" do
+        subject = SocialLinker::Subject.new(
+          title: "title",
+          site_title_postfix: "murb.nl",
+          url: "https://murb.nl/blog",
+        )
+        expected_result = '<meta name="twitter:card" content="summary" />
+<meta name="twitter:domain" content="https://murb.nl" />
+<meta property="og:url" content="https://murb.nl/blog" />
+<link rel="canonical" href="https://murb.nl/blog" />
+<title>title - murb.nl</title>
+<meta name="twitter:title" content="title" />
+<meta property="og:title" content="title" />
+<meta property="og:site_name" content="murb.nl" />'
+        expect(SimulatedActionView.new.header_meta_tags(subject)).to eq(expected_result)
+      end
     end
     describe "#social_link_to_image" do
       it "should return nil if no network or image path is given" do

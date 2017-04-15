@@ -176,6 +176,7 @@ module SocialLinker
     def merge!(options)
       options = options.options if options.is_a? SocialLinker::Subject
       @options.merge!(options)
+      @options[:render_site_title_postfix] = true if @options[:render_site_title_postfix].nil?
       @options[:u] = @options[:url] unless @options[:u]
       @options[:media] = @options[:image_url] unless @options[:media]
       @options[:description] = @options[:summary] unless @options[:description]
