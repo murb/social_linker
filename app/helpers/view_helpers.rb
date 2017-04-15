@@ -6,7 +6,13 @@ module ViewHelpers
   def meta_tag(name, content)
     content = erb_sanitized(content)
     name = erb_sanitized(name)
-    name_or_property_attribute = (name.start_with?("og:") or name.start_with?("fb:")) ? "property" : "name"
+    name_or_property_attribute = if (name.start_with?("og:") or name.start_with?("fb:"))
+        "property"
+      elsif ['Content-Language'].include? name
+        "http-equiv"
+      else
+        "name"
+    end
     "<meta #{name_or_property_attribute}=\"#{name}\" content=\"#{content}\" />" if content and content.to_s.strip != ""
   end
 
@@ -21,26 +27,29 @@ module ViewHelpers
   # header_meta_tags renders the most important metatags based on the SocialLinker::Subject
   #
   # @param [SocialLinker::Subject] the SocialLinker::Subject initialized as complete as possible
-  # @param [Hash] options with site-defaults for `:site_title_postfix`, (e.g. article title - {site title postfix here}), `:domain` (the main url),
+  # @param [Hash] options with site-defaults for `:site_title_postfix`, (e.g. article title - {site title postfix here}), `:domain` (the main url). These options are overridden by the subject if set by the subject.
   # @return String of tags (possibly marked as sanitized when available)
   def header_meta_tags subject, options={}
+    options = options.merge(subject.options) if subject
+
     site_title_postfix = options[:site_title_postfix]
     site_name = options[:site_name] || site_title_postfix
-    header_html = []
-    if subject
-      site_name ||= subject.options[:site_name]
-      if subject.options[:render_site_title_postfix]
-        site_title_postfix ||= subject.options[:site_title_postfix]
-        site_name ||= site_title_postfix
-      else
-        site_title_postfix = nil
-      end
-      domain = options[:domain] || subject.options[:domain]
+    site_title_postfix = nil if options[:render_site_title_postfix] == false
+    language = options[:language]
+    domain = options[:domain]
 
+    header_html = []
+
+    header_html << meta_tag("twitter:site", options[:twitter_username])
+    header_html << meta_tag("twitter:creator", options[:twitter_username])
+    header_html << meta_tag("twitter:domain", domain)
+    header_html << meta_tag("Content-Language", language)
+    header_html << meta_tag("dc.language", language)
+    header_html << meta_tag("og:locale", language)
+    header_html << meta_tag("fb:app_id", options[:facebook_app_id])
+
+    if subject
       header_html << meta_tag("twitter:card", subject.media ? :summary_large_image : :summary)
-      header_html << meta_tag("twitter:site", subject.options[:twitter_username])
-      header_html << meta_tag("twitter:creator", subject.options[:twitter_username])
-      header_html << meta_tag("twitter:domain", domain)
 
       if subject.url
         header_html << meta_tag("og:url", subject.canonical_url)
@@ -48,12 +57,11 @@ module ViewHelpers
       end
 
       header_html << meta_tag("keywords", subject.tags.join(" "))
-      header_html << meta_tag("description", subject.summary(true))
+      header_html << meta_tag("description", subject.summary(false))
 
       header_html << meta_tag("twitter:description", subject.summary(true))
-      header_html << meta_tag("og:description", subject.summary(true))
+      header_html << meta_tag("og:description", subject.summary(false))
 
-      header_html << meta_tag("fb:app_id", subject.options[:facebook_app_id])
 
       if subject.media
         header_html << meta_tag("twitter:image:src", subject.media)

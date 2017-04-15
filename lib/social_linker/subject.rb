@@ -143,6 +143,8 @@ module SocialLinker
     # * description
     # * facebook_app_id
     # * twitter_username
+    # * language
+    # * site_title_postfix
     # * ... and more often medium specific attributes...
     #
     # Note by default tracking parameters are added, turn this off by passing
@@ -166,6 +168,7 @@ module SocialLinker
     # * description
     # * facebook_app_id
     # * twitter_username
+    # * render_site_title_postfix
     # * ... and more often medium specific attributes...
     #
     # Note by default tracking parameters are added, turn this off by passing

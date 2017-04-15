@@ -40,10 +40,10 @@ describe SocialLinker do
           tags: ["key1", "key2"],
           twitter_username: 'murb'
         )
-        expected_result = '<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="murb" />
+        expected_result = '<meta name="twitter:site" content="murb" />
 <meta name="twitter:creator" content="murb" />
 <meta name="twitter:domain" content="https://murb.nl" />
+<meta name="twitter:card" content="summary" />
 <meta property="og:url" content="https://murb.nl/blog" />
 <link rel="canonical" href="https://murb.nl/blog" />
 <meta name="keywords" content="key1 key2" />
@@ -66,10 +66,10 @@ describe SocialLinker do
         options = {
           site_title_postfix: "murb.nl"
         }
-        expected_result = '<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="murb" />
+        expected_result = '<meta name="twitter:site" content="murb" />
 <meta name="twitter:creator" content="murb" />
 <meta name="twitter:domain" content="https://murb.nl" />
+<meta name="twitter:card" content="summary_large_image" />
 <meta property="og:url" content="https://murb.nl/blog" />
 <link rel="canonical" href="https://murb.nl/blog" />
 <meta name="keywords" content="key1 key2" />
@@ -95,8 +95,8 @@ describe SocialLinker do
         options = {
           site_title_postfix: "murb.nl"
         }
-        expected_result = '<meta name="twitter:card" content="summary" />
-<meta name="twitter:domain" content="https://murb.nl" />
+        expected_result = '<meta name="twitter:domain" content="https://murb.nl" />
+<meta name="twitter:card" content="summary" />
 <meta property="og:url" content="https://murb.nl/blog" />
 <link rel="canonical" href="https://murb.nl/blog" />
 <title>title</title>
@@ -111,8 +111,8 @@ describe SocialLinker do
           site_title_postfix: "murb.nl",
           url: "https://murb.nl/blog",
         )
-        expected_result = '<meta name="twitter:card" content="summary" />
-<meta name="twitter:domain" content="https://murb.nl" />
+        expected_result = '<meta name="twitter:domain" content="https://murb.nl" />
+<meta name="twitter:card" content="summary" />
 <meta property="og:url" content="https://murb.nl/blog" />
 <link rel="canonical" href="https://murb.nl/blog" />
 <title>title - murb.nl</title>
