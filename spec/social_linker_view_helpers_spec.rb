@@ -151,7 +151,7 @@ describe SocialLinker do
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect(SimulatedActionView.new.social_link_to(subject,:facebook)).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog\" target=\"_blank\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+        expect(SimulatedActionView.new.social_link_to(subject,:facebook)).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
       it "should return return a share link with a button class if given" do
         subject = SocialLinker::Subject.new(
@@ -159,7 +159,7 @@ describe SocialLinker do
           url: "https://murb.nl/blog",
         )
         a = SimulatedActionView.new.social_link_to(subject,:facebook, {class: :button})
-        expect(a).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog\" target=\"_blank\" class=\"button facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+        expect(a).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"button facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
       it "should return return a share link with a button classes if given" do
         subject = SocialLinker::Subject.new(
@@ -167,21 +167,21 @@ describe SocialLinker do
           url: "https://murb.nl/blog",
         )
         a = SimulatedActionView.new.social_link_to(subject,:facebook, {class: [:button, :share]})
-        expect(a).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog\" target=\"_blank\" class=\"button share facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+        expect(a).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"button share facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
       it "should return return a share link when a block is given" do
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect(SimulatedActionView.new.social_link_to(subject,:facebook){ "Facebook" }).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog\" target=\"_blank\" class=\"facebook\" title=\"Facebook\">Facebook</a>")
+        expect(SimulatedActionView.new.social_link_to(subject,:facebook){ "Facebook" }).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"facebook\" title=\"Facebook\">Facebook</a>")
       end
       it "should return return a share link without target blank when told to do so" do
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect(SimulatedActionView.new.social_link_to(subject,:facebook, {target_blank: false})).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+        expect(SimulatedActionView.new.social_link_to(subject,:facebook, {target_blank: false})).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
     end
   end

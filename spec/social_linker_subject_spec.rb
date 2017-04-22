@@ -101,7 +101,7 @@ describe SocialLinker do
     # https://twitter.com/home?status=http%3A//example.com
     it 'should urlencode values' do
       slb = SocialLinker::Subject.new(url: "http://example.com")
-      expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com")
+      expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
     end
 
 
@@ -109,7 +109,7 @@ describe SocialLinker do
       it 'should work for :facebook' do
         # https://www.facebook.com/sharer/sharer.php?u=http%3A//example.com
         slb = SocialLinker::Subject.new(url: "http://example.com")
-        expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com")
+        expect(slb.share_link(:facebook)).to eq("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
       end
       it 'should work for :twitter' do
         # https://www.facebook.com/sharer/sharer.php?u=http%3A//example.com

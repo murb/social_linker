@@ -11,27 +11,27 @@ module SocialLinker
       },
       pinterest: {
         base: "https://pinterest.com/pin/create/button/?",
-        params: {url: :url, media: :media, description: :title}
+        params: {url: :share_url, media: :media, description: :title}
       },
       linkedin: {
         base: "https://www.linkedin.com/shareArticle?mini=true&",
-        params: [:url, :title, :summary, :source]
+        params: {url: :share_url, title: :title, summary: :summary, source: :source}
       },
       google: {
         base: "https://plus.google.com/share?",
-        params: [:url]
+        params: {url: :share_url}
       },
       twitter: {
         base: "https://twitter.com/intent/tweet?",
-        params: {text: :twitter_text, via: :via, url: :url, hashtags: :hashtags}
+        params: {text: :twitter_text, via: :via, url: :share_url, hashtags: :hashtags}
       },
       twitter_native: {
         base: "twitter://post?",
-        params: [message: :twitter_text_with_url_and_hashags]
+        params: {message: :twitter_text_with_url_and_hashags}
       },
       facebook: {
         base: "https://www.facebook.com/sharer/sharer.php?",
-        params: [:u]
+        params: {u: :share_url}
       },
       facebook_native: {
         base: "fb://publish/profile/me?",
@@ -193,20 +193,21 @@ module SocialLinker
 
       @options[:text] = "#{@options[:title]} #{@options[:url]}" unless @options[:text] #facebook & whatsapp native
       @options[:canonical_url] = @options[:url]
+      @options[:share_url] = @options[:url]
       @options[:domain] = @options[:url].split(/\//)[0..2].join("/") if @options[:url] and !@options[:domain]
 
-      if @options[:url] and utm_parameters
-        unless @options[:url].match /utm_source/
-          combine_with = @options[:url].match(/\?/) ? "&" : "?"
-          @options[:url] = "#{@options[:url]}#{combine_with}utm_source=<%=share_source%>"
+      if @options[:share_url] and utm_parameters
+        unless @options[:share_url].match /utm_source/
+          combine_with = @options[:share_url].match(/\?/) ? "&" : "?"
+          @options[:share_url] = "#{@options[:share_url]}#{combine_with}utm_source=<%=share_source%>"
         end
-        unless @options[:url].match /utm_medium/
+        unless @options[:share_url].match /utm_medium/
           combine_with = "&"
-          @options[:url] = "#{@options[:url]}#{combine_with}utm_medium=share_link"
+          @options[:share_url] = "#{@options[:share_url]}#{combine_with}utm_medium=share_link"
         end
-        unless @options[:url].match /utm_campaign/
+        unless @options[:share_url].match /utm_campaign/
           combine_with = "&"
-          @options[:url] = "#{@options[:url]}#{combine_with}utm_campaign=social"
+          @options[:share_url] = "#{@options[:share_url]}#{combine_with}utm_campaign=social"
         end
       end
       if @options[:tags]
@@ -216,6 +217,8 @@ module SocialLinker
 
       # make sure urls are absolute
       @options[:url] = prefix_domain(@options[:url],@options[:domain])
+      @options[:share_url] = prefix_domain(@options[:share_url],@options[:domain])
+      @options[:canonical_url] = prefix_domain(@options[:canonical_url],@options[:domain])
       @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
       @options[:media] = prefix_domain(@options[:media],@options[:domain])
 
@@ -232,9 +235,9 @@ module SocialLinker
       return options[:body] if options[:body]
       rv = ""
       rv += "#{@options[:summary]}\n" if options[:summary]
-      rv += "\n#{@options[:url]}\n" if options[:url]
+      rv += "\n#{@options[:share_url]}\n" if options[:share_url]
       rv += "\n#{@options[:description]}\n" if options[:summary] != options[:description] and options[:description]
-      rv += "\n#{@options[:media]}\n" if options[:media] != options[:url] and options[:media]
+      rv += "\n#{@options[:media]}\n" if options[:media] != options[:share_url] and options[:media]
       rv += "\n\n#{hashtag_string(@options[:tags])}" if options[:tags]
       rv.strip!
       rv = nil if rv == ""
@@ -264,7 +267,7 @@ module SocialLinker
       return options[:twitter_text_with_url_and_hashags] if options[:twitter_text_with_url_and_hashags]
       return options[:message] if options[:message]
       return options[:status] if options[:status]
-      [twitter_text,twitter_hash_tags,url].delete_if{|a| a.nil? or a.empty?}.join(" ")
+      [twitter_text,twitter_hash_tags,share_url].delete_if{|a| a.nil? or a.empty?}.join(" ")
     end
     alias_method :status, :twitter_text_with_url_and_hashags
 
