@@ -189,21 +189,25 @@ describe SocialLinker do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
       slb.merge!({})
       expect(slb.message).to eq("kaas")
+      expect(slb.canonical_url).to eq("http://g.to")
     end
     it "should allow values to be overwritten" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
       slb.merge!({message: "cheese"})
       expect(slb.message).to eq("cheese")
+      expect(slb.canonical_url).to eq("http://g.to")
     end
     it "allows merging with another sociallinker subject" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
       slb.merge!(SocialLinker::Subject.new(message: "cheese"))
       expect(slb.message).to eq("cheese")
+      expect(slb.canonical_url).to eq("http://g.to")
     end
     it "allows description another description" do
       slb = SocialLinker::Subject.new(url: "http://g.to", description: "kaas")
       slb.merge!(description: "cheese")
       expect(slb.description).to eq("cheese")
+      expect(slb.canonical_url).to eq("http://g.to")
     end
   end
 
