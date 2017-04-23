@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/murb/social_linker.svg?branch=master)](https://travis-ci.org/murb/social_linker)
 
+**SocialLinker solves two problems involving social networks (and search engines):
+proper meta-headers and proper share links.**
+
 SocialLinker is able to generate the most common share links for you, without depending on JavaScript.
 You should use generated links, instead of the share buttons provided by the platforms themselves, to
 protect your user's privacy, and this gem makes it easy for you to do so.
@@ -28,6 +31,8 @@ Or install it yourself as:
 
 ## Usage
 
+### Basics
+
 Initialize the subject with enough material to generate links from, such as the page's url, maybe the image url (mainly for Pinterest type-shares), a description, tags etc.
 
 For example, initialze
@@ -46,6 +51,61 @@ Which will deliver you the following url:
 
     mailto:emailaddress?subject=Example%20website&body=Example.com%20is%20the%20typical%20URL%20you%20would%20want%20to%20use%20in%20explanations%20anyway.%0A%0Ahttp%3A%2F%2Fexample.com%2F
 
+### Setting up the subject
+
+The supported options are:
+
+* url
+* media (media url, e.g. an image (now only Pinterest))
+* summary
+* description
+* title
+* tags
+
+And of a more site-global nature:
+
+* twitter_username
+* facebook_app_id
+* language
+* site_title_postfix (which can be hidden by setting `render_site_title_postfix` to false)
+
+I've tried to map them as good as possible to the different share tools. Sometimes by combining several values. You may also pass along link-specific parameters such as `:hashtags`, so you can control the 2-tag long string that is generated from the list of tags by default.
+
+For example:
+
+    @subject = SocialLinker::Subject.new(
+      title: "title",
+      url: "https://murb.nl/blog",
+      image_url: "https://murb.nl/image.jpg",
+      image_type: 'image/jpeg',
+      summary: "short summary",
+      tags: ["key1", "key2", "key3"],
+    )
+
+You can also merge details later on. Let's say you want to set the global values:
+
+    @subject = SocialLinker::Subject.new(
+      site_title_postfix: ":murb:",
+      twitter_username: 'murb',
+      facebook_app_id: '123123123',
+      tags: ['murb', 'ruby']
+    )
+
+You might to set these defaults in a before action in your (Ruby on Rails-speak)
+ApplicationController. Later on you can merge details into this subject:
+
+    @subject.merge!({
+      title: "title",
+      url: "https://murb.nl/blog",
+      image_url: "https://murb.nl/image.jpg",
+      image_type: 'image/jpeg',
+      summary: "short summary",
+      tags: ["key1", "key2", "key3"]
+    })
+
+### Creating share links
+
+
 Currently support is available for the following ways of sharing:
 
     :email
@@ -62,46 +122,12 @@ Or to save you the copy-paste:
 
 [TestMailLink](mailto:emailaddress?subject=Example%20website&body=Example.com%20is%20the%20typical%20URL%20you%20would%20want%20to%20use%20in%20explanations%20anyway.%0A%0Ahttp%3A%2F%2Fexample.com%2F)
 
-The supported options are:
 
-* url
-* media (media url, e.g. an image (now only Pinterest))
-* summary
-* description
-* title
-* tags
-
-I've tried to map them as good as possible to the different share tools. Sometimes by combining several values. You may also pass along link-specific parameters such as `:hashtags`, so no 2-tag long string is generated from the list of tags.
-
-To conclude: a very complete instantiation:
-
-    @subject = SocialLinker::Subject.new(
-      title: "title",
-      url: "https://murb.nl/blog",
-      image_url: "https://murb.nl/image.jpg",
-      image_type: 'image/jpeg',
-      summary: "short summary",
-      tags: ["key1", "key2", "key3"],
-      twitter_username: 'murb'
-    )
-
-## UTM Campaign parameters
+#### UTM Campaign parameters
 
 By default [utm campaign parameters](https://support.google.com/analytics/answer/1033863?hl=en) are added when they are not present. You can turn this off by passing the option: `utm_parameters: false`.
 
-## Rails helpers
-
-When using Ruby on Rails a few helpers have been created.
-
-### OpenGraph, Twitter, and HTML meta-data:
-
-Just set the following, which should give you a reasonable default.
-
-    header_meta_tags(@subject, {
-      site_title_postfix: "your sitename" # optional
-    })
-
-### Link helper with SVG icons
+#### Link helper with SVG icons (Rails)
 
 Use the following to create a sharelink to Facebook
 
@@ -126,7 +152,26 @@ the following line to the head of your application.ccs file:
 
     *= require social_linker/icons
 
-#### Reuse the SVG icons elsewhere
+
+### Meta-Headers
+
+When using Ruby on Rails a few helpers have been created.
+
+
+Just set the following, which should give you a reasonable default.
+
+    header_meta_tags(@subject, {
+      site_title_postfix: "your sitename" # optional
+    })
+
+Alternatively you can also set the `site_title_post` in the `Subject` directly,
+as suggested in an earlier section:
+
+    header_meta_tags(@subject)
+
+## Advanced
+
+### Reuse the SVG icons elsewhere
 
 When integrating social icons into your site, you might also want to include login options
 for these social networks, or access the icons for other reasons. Below is 'standard'
@@ -157,7 +202,9 @@ Included layers:
 * icon-whatsapp
 * icon-tumblr
 
-#### Tip: SVG4Everyone
+## Problem solving
+
+### SVG Icons not showing up in older browsers
 
 When using SVG and serving your pages to older browsers, make sure you use something
 like SVG4Everyone. Include in your gemfile:
@@ -169,6 +216,7 @@ like SVG4Everyone. Include in your gemfile:
 and include the following line to the head of your `application.js` file:
 
     //= require svg4everybody
+
 
 ## TODO
 
