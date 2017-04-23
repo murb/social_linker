@@ -94,12 +94,12 @@ module ViewHelpers
 
   def social_link_to_image(network, image_path=nil)
     if image_path == nil
-      image_path = image_path('social_linker/icons.svg') if self.methods.include?(:image_path)
+      image_path = asset_path("social_linker/icons.svg") if self.methods.include?(:image_path)
     end
 
     if network and image_path
       html = "<svg class=\"icon icon-#{network} icon-default-style\"><title>#{network.capitalize}</title><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
-      html = html.html_safe if html.methods.include?(:html_safe)
+      # html = html.html_safe if html.methods.include?(:html_safe)
       html
     end
   end
@@ -122,7 +122,7 @@ module ViewHelpers
     raise ArgumentError, "subject can't be nil" unless subject
     raise ArgumentError, "network can't be nil" unless network
     options_with_defaults = {
-      social_icons_image_path: 'social_linker/icons.svg',
+      social_icons_asset_path: 'social_linker/icons.svg',
       title: network.to_s.capitalize,
       target_blank: true,
     }.merge(options)
@@ -132,10 +132,10 @@ module ViewHelpers
     if block_given?
       link_content = capture{ yield }
     else
-      social_icons_image_path = options_with_defaults[:social_icons_image_path]
-      social_icons_image_path = image_path(social_icons_image_path) if self.methods.include?(:image_path)
+      social_icons_asset_path = options_with_defaults[:social_icons_asset_path]
+      social_icons_asset_path = asset_path(social_icons_asset_path) if self.methods.include?(:image_path)
 
-      link_content = social_link_to_image(network, social_icons_image_path)
+      link_content = social_link_to_image(network, social_icons_asset_path)
     end
 
     title = options_with_defaults[:title]

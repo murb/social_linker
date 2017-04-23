@@ -192,10 +192,11 @@ describe SocialLinker do
       expect(slb.canonical_url).to eq("http://g.to")
     end
     it "should allow values to be overwritten" do
-      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
-      slb.merge!({message: "cheese"})
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", tags: [])
+      slb.merge!({message: "cheese", tags: ["a","b"]})
       expect(slb.message).to eq("cheese")
       expect(slb.canonical_url).to eq("http://g.to")
+      expect(slb.twitter_hash_tags).to eq("#a #b")
     end
     it "allows merging with another sociallinker subject" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
