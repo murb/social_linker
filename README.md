@@ -198,9 +198,13 @@ Included layers:
 * icon-twitter
 * icon-pinterest
 * icon-facebook
+* icon-facebook-unofficial
 * icon-linkedin
 * icon-whatsapp
 * icon-tumblr
+
+Icons have been created with the [IcoMoon App](https://icomoon.io/app) and come
+from the [Font Awesome](http://scripts.sil.org/OFL)-set (OFL licensed).
 
 ## Problem solving
 

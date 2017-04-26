@@ -55,6 +55,13 @@ Example showing how to change the color/size of the icons:
   }
 }
 
+.icon-facebook-unofficial {
+  width: 0.587890625em;
+  .colored {
+    color: $facebook-color;
+  }
+}
+
 .icon-google {
 	width: 0.83984375em;
   .colored {
