@@ -52,6 +52,8 @@ module SocialLinker
       if tags and tags.count > 0
         tags = tags.collect{|a| camelize_tag_when_needed(a) }
         "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}"
+      else
+        ""
       end
     end
 

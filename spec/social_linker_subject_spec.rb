@@ -25,9 +25,9 @@ describe SocialLinker do
   end
 
   describe '#hashtag_string' do
-    it 'returns nill if no hashes are given' do
+    it 'returns empty string if no hashes are given' do
       slb = SocialLinker::Subject.new
-      expect(slb.hashtag_string([])).to eq(nil)
+      expect(slb.hashtag_string([])).to eq("")
     end
     it 'accepts array of strings' do
       slb = SocialLinker::Subject.new
