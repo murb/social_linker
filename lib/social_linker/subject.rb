@@ -77,6 +77,27 @@ module SocialLinker
       @options[:image_url]
     end
 
+    def dimensions
+      return @dimensions if @dimensions
+      if media
+        @dimensions = @options[:dimensions]
+        @dimensions = {
+          width: @options[:width],
+          height: @options[:height]
+        }
+      else
+        {}
+      end
+    end
+
+    def width
+      dimensions[:width]
+    end
+
+    def height
+      dimensions[:height]
+    end
+
     def utm_parameters
       [nil, true].include?(@options[:utm_parameters]) ? true : false
     end

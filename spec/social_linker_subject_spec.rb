@@ -210,6 +210,32 @@ describe SocialLinker do
       expect(slb.description).to eq("cheese")
       expect(slb.canonical_url).to eq("http://g.to")
     end
+    it "allows rewriting title" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", description: "kaas")
+      slb.merge!(title: "cheese")
+      expect(slb.description).to eq("kaas")
+      expect(slb.title).to eq("cheese")
+      expect(slb.canonical_url).to eq("http://g.to")
+    end
+  end
+
+  describe "#dimensions, #width, #height" do
+    it "should return an empty hash by default" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
+      expect(slb.dimensions).to eq({})
+      expect(slb.height).to eq(nil)
+      expect(slb.width).to eq(nil)
+    end
+    it "should return an width and height when given in combination with some media" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", width: 200, height: 100)
+      expect(slb.dimensions).to eq({})
+      expect(slb.height).to eq(nil)
+      expect(slb.width).to eq(nil)
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", width: 200, height: 100, image_url: "http://example.com/image.png")
+      expect(slb.dimensions).to eq({width: 200, height: 100})
+      expect(slb.height).to eq(100)
+      expect(slb.width).to eq(200)
+    end
   end
 
 
