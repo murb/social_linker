@@ -182,6 +182,21 @@ describe SocialLinker do
       slb = SocialLinker::Subject.new(description: long_string, url: "http://g.to")
       expect(slb.summary(true)).to eq("abcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd aabcd …")
     end
+    it "allows complex merge" do
+      slb = SocialLinker::Subject.new({
+        facebook_app_id: 123123,
+        title: "title",
+        url: "http://example.com",
+        media: "http://example.com/image.jpg",
+        twitter_username: 'murb',
+        description: "long and old description",
+        tags: (["lots", "of", "tags"]).flatten.compact,
+      })
+      slb.merge!(title: "new title", description: "new description")
+      expect(slb.summary).to eq("new description")
+      expect(slb.summary(true)).to eq("new description")
+      expect(slb.summary(false)).to eq("new description")
+    end
   end
 
   describe "#merge!" do
