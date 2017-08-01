@@ -230,7 +230,7 @@ module SocialLinker
       @options[:u] = @options[:url] unless @options[:u]
       @options[:media] = @options[:image_url] unless @options[:media]
       @options[:description] = @options[:summary] unless @options[:description]
-      @options[:summary] = @options[:description] unless @options[:summary]
+      @options[:summary] = @options[:description] unless options[:summary]
       @options[:title] = "#{ strip_string(@options[:summary], 120) }" unless @options[:title]
       @options[:description] = @options[:title] unless @options[:description]
       @options[:subject] = @options[:title] unless @options[:subject]

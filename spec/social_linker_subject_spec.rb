@@ -209,6 +209,7 @@ describe SocialLinker do
       slb.merge!(description: "cheese")
       expect(slb.description).to eq("cheese")
       expect(slb.canonical_url).to eq("http://g.to")
+      expect(slb.summary).to eq("cheese")
     end
     it "allows rewriting title" do
       slb = SocialLinker::Subject.new(url: "http://g.to", description: "kaas")
@@ -216,6 +217,11 @@ describe SocialLinker do
       expect(slb.description).to eq("kaas")
       expect(slb.title).to eq("cheese")
       expect(slb.canonical_url).to eq("http://g.to")
+    end
+    it "allows merging tags" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", description: "kaas", tags: ["a", "b"])
+      slb.merge!(tags: ["c", "d"])
+      expect(slb.tags).to eq(["c", "d"])
     end
   end
 

@@ -103,6 +103,18 @@ ApplicationController. Later on you can merge details into this subject:
       tags: ["key1", "key2", "key3"]
     })
 
+*Hint*, the media_dimensions are 'compatible' with the output of the Dimensions-gem:
+
+    @subject.merge!({
+      title: @article.title,
+      url: article_url(@article),
+      media: @article.image.url(:inline),
+      media_dimensions: Dimensions.dimensions(@article.image.path(:inline)),
+      summary: @article.description,
+      tags: @article.tag_list.to_a
+    })
+
+
 ### Creating share links
 
 
