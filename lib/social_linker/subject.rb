@@ -77,25 +77,31 @@ module SocialLinker
       @options[:image_url]
     end
 
-    def dimensions
-      return @dimensions if @dimensions
+    def media_dimensions
+      return @media_dimensions if @media_dimensions
       if media
-        @dimensions = @options[:dimensions]
-        @dimensions = {
-          width: @options[:width],
-          height: @options[:height]
+        @media_dimensions = @options[:media_dimensions]
+        if @media_dimensions.is_a? Array
+          @media_dimensions = {
+            width: @media_dimensions[0],
+            height: @media_dimensions[1]
+          }
+        end
+        @media_dimensions ||= {
+          width: @options[:media_width],
+          height: @options[:media_height]
         }
       else
         {}
       end
     end
 
-    def width
-      dimensions[:width].to_i if dimensions[:width]
+    def media_width
+      media_dimensions[:width].to_i if media_dimensions[:width]
     end
 
-    def height
-      dimensions[:height].to_i if dimensions[:height]
+    def media_height
+      media_dimensions[:height].to_i if media_dimensions[:height]
     end
 
     def utm_parameters
@@ -122,6 +128,23 @@ module SocialLinker
     # @return String with media-url
     def media
       @options[:media]
+    end
+
+    def filename_derived_image_type
+      if media
+        extension = media.to_s.split(".").last.downcase
+        if extension == "jpg" or extension == "jpeg"
+          "image/jpeg"
+        elsif extension == "png"
+          "image/png"
+        elsif extension == "gif"
+          "image/gif"
+        end
+      end
+    end
+
+    def image_type
+      @options[:image_type] || filename_derived_image_type
     end
 
     # default tags accessor
@@ -163,6 +186,7 @@ module SocialLinker
     # * url
     # * title
     # * image_url & image_type(image/jpeg, image/png)
+    # * width and height for the images
     # * description
     # * facebook_app_id
     # * twitter_username

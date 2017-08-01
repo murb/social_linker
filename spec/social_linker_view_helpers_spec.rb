@@ -57,8 +57,9 @@ describe SocialLinker do
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog",
-          image_url: "https://murb.nl/image.jpg",
-          image_type: 'image/jpeg',
+          media: "https://murb.nl/image.jpg",
+          media_width: 600,
+          media_height: 400,
           summary: "short summary",
           tags: ["key1", "key2"],
           twitter_username: 'murb'
@@ -78,6 +79,8 @@ describe SocialLinker do
 <meta property="og:description" content="short summary" />
 <meta name="twitter:image:src" content="https://murb.nl/image.jpg" />
 <meta property="og:image" content="https://murb.nl/image.jpg" />
+<meta property="og:image:width" content="600" />
+<meta property="og:image:height" content="400" />
 <meta property="og:image:type" content="image/jpeg" />
 <title>title - murb.nl</title>
 <meta name="twitter:title" content="title" />

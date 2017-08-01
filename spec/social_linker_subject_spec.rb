@@ -219,24 +219,57 @@ describe SocialLinker do
     end
   end
 
-  describe "#dimensions, #width, #height" do
+  describe "#media_dimensions, #media_width, #media_height" do
     it "should return an empty hash by default" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
-      expect(slb.dimensions).to eq({})
-      expect(slb.height).to eq(nil)
-      expect(slb.width).to eq(nil)
+      expect(slb.media_dimensions).to eq({})
+      expect(slb.media_height).to eq(nil)
+      expect(slb.media_width).to eq(nil)
     end
     it "should return an width and height when given in combination with some media" do
-      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", width: 200, height: 100)
-      expect(slb.dimensions).to eq({})
-      expect(slb.height).to eq(nil)
-      expect(slb.width).to eq(nil)
-      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", width: 200, height: 100, image_url: "http://example.com/image.png")
-      expect(slb.dimensions).to eq({width: 200, height: 100})
-      expect(slb.height).to eq(100)
-      expect(slb.width).to eq(200)
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", media_width: 200, media_height: 100)
+      expect(slb.media_dimensions).to eq({})
+      expect(slb.media_height).to eq(nil)
+      expect(slb.media_width).to eq(nil)
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", media_width: 200, media_height: 100, image_url: "http://example.com/image.png")
+      expect(slb.media_dimensions).to eq({width: 200, height: 100})
+      expect(slb.media_height).to eq(100)
+      expect(slb.media_width).to eq(200)
+    end
+    it "should return an width and height when given dimension array" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", media_dimensions: [400, 200], image_url: "http://example.com/image.png")
+      expect(slb.media_dimensions).to eq({width: 400, height: 200})
+      expect(slb.media_height).to eq(200)
+      expect(slb.media_width).to eq(400)
     end
   end
 
+  describe "#media" do
+    it "should return image_url" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", image_url: "http://example.com/image.png")
+      expect(slb.media).to eq("http://example.com/image.png")
+    end
+  end
+
+  describe "#filename_derived_image_type" do
+    it "should return nil when no image" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
+      expect(slb.filename_derived_image_type).to eq(nil)
+    end
+    it "should return nil when weird image" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", image_url: "http://example.com/image.weird")
+      expect(slb.filename_derived_image_type).to eq(nil)
+    end
+    it "should derive png" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", image_url: "http://example.com/image.png")
+      expect(slb.filename_derived_image_type).to eq("image/png")
+      expect(slb.image_type).to eq("image/png")
+    end
+    it "should derive jpeg" do
+      slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas", image_url: "http://example.com/image.JPeG")
+      expect(slb.filename_derived_image_type).to eq("image/jpeg")
+      expect(slb.image_type).to eq("image/jpeg")
+    end
+  end
 
 end

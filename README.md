@@ -56,7 +56,7 @@ Which will deliver you the following url:
 The supported options are:
 
 * url
-* media (media url, e.g. an image (now only Pinterest))
+* media (media url, e.g. an image (shared only for Pinterest, but also used in OpenGraph headers & Twitter Cards))
 * summary
 * description
 * title
@@ -76,8 +76,8 @@ For example:
     @subject = SocialLinker::Subject.new(
       title: "title",
       url: "https://murb.nl/blog",
-      image_url: "https://murb.nl/image.jpg",
-      image_type: 'image/jpeg',
+      media: "https://murb.nl/image.jpg",
+      media_dimensions: [640, 480],
       summary: "short summary",
       tags: ["key1", "key2", "key3"],
     )
@@ -97,8 +97,8 @@ ApplicationController. Later on you can merge details into this subject:
     @subject.merge!({
       title: "title",
       url: "https://murb.nl/blog",
-      image_url: "https://murb.nl/image.jpg",
-      image_type: 'image/jpeg',
+      media: "https://murb.nl/image.jpg",
+      media_dimensions: [640, 480],
       summary: "short summary",
       tags: ["key1", "key2", "key3"]
     })

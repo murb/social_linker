@@ -66,9 +66,9 @@ module ViewHelpers
       if subject.media
         header_html << meta_tag("twitter:image:src", subject.media)
         header_html << meta_tag("og:image", subject.media)
-        header_html << meta_tag("og:image:width", subject.width)
-        header_html << meta_tag("og:image:height", subject.height)
-        header_html << meta_tag("og:image:type", subject.options[:image_type])
+        header_html << meta_tag("og:image:width", subject.media_width)
+        header_html << meta_tag("og:image:height", subject.media_height)
+        header_html << meta_tag("og:image:type", subject.image_type)
       end
     end
 
