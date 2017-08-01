@@ -91,11 +91,11 @@ module SocialLinker
     end
 
     def width
-      dimensions[:width]
+      dimensions[:width].to_i if dimensions[:width]
     end
 
     def height
-      dimensions[:height]
+      dimensions[:height].to_i if dimensions[:height]
     end
 
     def utm_parameters
