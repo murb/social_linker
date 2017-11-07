@@ -50,9 +50,11 @@ describe SocialLinker do
 <meta name="description" content="short summary" />
 <meta name="twitter:description" content="short summary" />
 <meta property="og:description" content="short summary" />
+<meta itemprop="description" content="short summary" />
 <title>title</title>
 <meta name="twitter:title" content="title" />
-<meta property="og:title" content="title" />'
+<meta property="og:title" content="title" />
+<meta itemprop="name" content="title" />'
         expect(SimulatedActionView.new.header_meta_tags(subject,{})).to eq(expected_result)
         subject = SocialLinker::Subject.new(
           title: "title",
@@ -77,15 +79,18 @@ describe SocialLinker do
 <meta name="description" content="short summary" />
 <meta name="twitter:description" content="short summary" />
 <meta property="og:description" content="short summary" />
+<meta itemprop="description" content="short summary" />
 <meta name="twitter:image:src" content="https://murb.nl/image.jpg" />
 <meta property="og:image" content="https://murb.nl/image.jpg" />
 <meta property="og:image:width" content="600" />
 <meta property="og:image:height" content="400" />
 <meta property="og:image:type" content="image/jpeg" />
+<meta itemprop="image" content="https://murb.nl/image.jpg" />
 <title>title - murb.nl</title>
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />
-<meta property="og:site_name" content="murb.nl" />'
+<meta property="og:site_name" content="murb.nl" />
+<meta itemprop="name" content="title - murb.nl" />'
         expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
 
       end
@@ -105,7 +110,8 @@ describe SocialLinker do
 <title>title</title>
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />
-<meta property="og:site_name" content="murb.nl" />'
+<meta property="og:site_name" content="murb.nl" />
+<meta itemprop="name" content="title" />'
         expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
       end
       it "should be able to set title postfix if set to do so" do
@@ -121,7 +127,8 @@ describe SocialLinker do
 <title>title - murb.nl</title>
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />
-<meta property="og:site_name" content="murb.nl" />'
+<meta property="og:site_name" content="murb.nl" />
+<meta itemprop="name" content="title - murb.nl" />'
         expect(SimulatedActionView.new.header_meta_tags(subject)).to eq(expected_result)
       end
     end
@@ -131,6 +138,22 @@ describe SocialLinker do
       end
       it "should return an svg" do
         expect(SimulatedActionView.new.social_link_to_image(:facebook,"svg_path")).to eq("<svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"svg_path#icon-facebook\"></use></svg>")
+      end
+    end
+
+    describe "#tag_if" do
+      it "should do the happy flow" do
+        expect(SimulatedActionView.new.tag_if(:meta, {a: 2, b: 2}, :a)).to eq "<meta a=\"2\" b=\"2\" />"
+      end
+      it "should return nil if not filled" do
+        expect(SimulatedActionView.new.tag_if(:meta, {a: nil, b: 2}, :a)).to eq nil
+        expect(SimulatedActionView.new.tag_if(:meta, {a: "", b: 2}, :a)).to eq nil
+        expect(SimulatedActionView.new.tag_if(:meta, {a: "   ", b: 2}, :a)).to eq nil
+      end
+      it "checks content by default" do
+        expect(SimulatedActionView.new.tag_if(:meta, {a: 2, b: 2})).to eq nil
+        expect(SimulatedActionView.new.tag_if(:meta, {content: 2, b: 2})).to eq "<meta content=\"2\" b=\"2\" />"
+
       end
     end
 

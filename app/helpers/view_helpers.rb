@@ -4,8 +4,7 @@ module ViewHelpers
   # param [String, Symbol] content (the value for the name or the property)
   # @returns [String, nil] nil is returned when the content is empty
   def meta_tag(name, content)
-    content = erb_sanitized(content)
-    name = erb_sanitized(name)
+    key_value_pairs = {}
     name_or_property_attribute = if (name.start_with?("og:") or name.start_with?("fb:"))
         "property"
       elsif ['Content-Language'].include? name
@@ -13,7 +12,27 @@ module ViewHelpers
       else
         "name"
     end
-    "<meta #{name_or_property_attribute}=\"#{name}\" content=\"#{content}\" />" if content and content.to_s.strip != ""
+    key_value_pairs[name_or_property_attribute] = name
+    key_value_pairs[:content] = content
+    tag_if(:meta, key_value_pairs, :content)
+  end
+
+  # renders a tag conditionally (if value is said)
+  # param [String, Symbol] tagname of the tag
+  # param [Hash] key value pairs (the attributes and their corresponding values
+  # param [String, Symbol] if_key is the key to be checked for containing a value, otherwise nil is returned, defaults to :content
+  # @returns [String, nil] nil is returned when the if_key is empty
+  def tag_if(tagname, key_value_pairs, if_key=:content)
+    tag = tagname.to_sym
+    critical_value = key_value_pairs[if_key]
+    if critical_value and critical_value.to_s.strip != ""
+      attribs = key_value_pairs.collect do |k,v|
+        key = erb_sanitized(k)
+        value = erb_sanitized(v)
+        rv = "#{key}=\"#{value}\""
+      end.join(" ")
+      "<#{tag} #{attribs} />"
+    end
   end
 
   def erb_sanitized(value)
@@ -40,8 +59,15 @@ module ViewHelpers
 
     header_html = []
 
+    # <link href="https://plus.google.com/+YourPage" rel="publisher">
+    #     <meta itemprop="name" content="Content Title">
+    #     <meta itemprop="description" content="Content description less than 200 characters">
+    #     <meta itemprop="image" content="http://example.com/image.jpg">
+    # =
+
     header_html << meta_tag("twitter:site", options[:twitter_username])
     header_html << meta_tag("twitter:creator", options[:twitter_username])
+    header_html << tag_if(:link, {href: "https://plus.google.com/+#{options[:google_plus_name]}", rel: "publisher"}, :href) if options[:google_plus_name]
     header_html << meta_tag("twitter:domain", domain)
     header_html << meta_tag("Content-Language", language)
     header_html << meta_tag("dc.language", language)
@@ -61,7 +87,7 @@ module ViewHelpers
 
       header_html << meta_tag("twitter:description", subject.summary(true))
       header_html << meta_tag("og:description", subject.summary(false))
-
+      header_html << tag_if(:meta, {itemprop: :description, content: subject.summary(false)})
 
       if subject.media
         header_html << meta_tag("twitter:image:src", subject.media)
@@ -69,6 +95,7 @@ module ViewHelpers
         header_html << meta_tag("og:image:width", subject.media_width)
         header_html << meta_tag("og:image:height", subject.media_height)
         header_html << meta_tag("og:image:type", subject.image_type)
+        header_html << tag_if(:meta, {itemprop: :image, content: subject.media})
       end
     end
 
@@ -79,6 +106,7 @@ module ViewHelpers
     header_html << meta_tag("twitter:title", title)
     header_html << meta_tag("og:title", title)
     header_html << meta_tag("og:site_name", site_name)
+    header_html << tag_if(:meta, {itemprop: :name, content: site_title}, :content)
 
 
     header_html.compact!
