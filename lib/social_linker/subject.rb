@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SocialLinker
   class Subject
 
@@ -323,13 +324,14 @@ module SocialLinker
     # @param [String] domain of the file
     # @return String with full url
     def prefix_domain path, domain
-      return_string = path
       if path and !path.include?("//")
-        path.gsub!(/^\//,'')
-        domain.gsub!(/\/$/,'')
-        return_string = [domain,path].join("/")
+        return [
+          domain.gsub(/\/$/,''),
+          path.gsub(/^\//,'')
+        ].join("/")
+      else
+        return path
       end
-      return_string
     end
 
     # Returns the given options, extended with the (derived) defaults

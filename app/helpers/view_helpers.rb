@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ViewHelpers
   # renders a metatag
   # param [String, Symbol] name (or property) (defaults to name, values starting with 'og:' (opengraph) will be using the property attribute)

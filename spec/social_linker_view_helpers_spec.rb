@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 $LOAD_PATH.unshift File.expand_path('../../app', __FILE__)
 require 'helpers/view_helpers'

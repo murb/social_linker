@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "social_linker/version"
 require "social_linker/subject"
 require 'social_linker/engine' if defined?(Rails)
