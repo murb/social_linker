@@ -218,7 +218,12 @@ describe SocialLinker do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
       slb.merge!(SocialLinker::Subject.new(message: "cheese"))
       expect(slb.message).to eq("cheese")
-      expect(slb.canonical_url).to eq(nil)
+      expect(slb.canonical_url).to eq("http://g.to")
+      # reverse
+      slb = SocialLinker::Subject.new(message: "cheese")
+      slb.merge!(SocialLinker::Subject.new(url: "http://g.to", message: "kaas"))
+      expect(slb.message).to eq("kaas")
+      expect(slb.canonical_url).to eq("http://g.to")
     end
     it "allows description another description" do
       slb = SocialLinker::Subject.new(url: "http://g.to", description: "kaas")

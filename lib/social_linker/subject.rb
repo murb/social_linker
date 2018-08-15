@@ -93,7 +93,7 @@ module SocialLinker
           height: @options[:media_height]
         }
       else
-        {}
+        @media_dimensions = {}
       end
     end
 
@@ -105,12 +105,33 @@ module SocialLinker
       media_dimensions[:height].to_i if media_dimensions[:height]
     end
 
-    def utm_parameters
+    def utm_parameters?
       [nil, true].include?(@options[:utm_parameters]) ? true : false
     end
 
+    def utm_parameters
+      if utm_parameters?
+        {
+          utm_source: "<%=share_source%>",
+          utm_medium: "share_link",
+          utm_campaign: "social"
+        }
+      end
+    end
+
     def canonical_url
-      @options[:canonical_url]
+      prefix_domain((@options[:canonical_url] || @options[:url]), @options[:domain])
+    end
+
+    def share_url
+      url_to_share = prefix_domain((@options[:share_url] || @options[:url]), @options[:domain])
+      if utm_parameters?
+        utm_url_params = utm_parameters.collect{|k,v| "#{k}=#{v}" unless url_to_share.match(k.to_s)}.compact.join("&")
+        combine_with = url_to_share.match(/\?/) ? "&" : "?"
+        return "#{url_to_share}#{combine_with}#{utm_url_params}"
+      else
+        return url_to_share
+      end
     end
 
     # default title accessor
@@ -122,7 +143,8 @@ module SocialLinker
     # default summary accessor
     # @return String with summary
     def summary(strip=false)
-      strip ? strip_string(@options[:summary], 300) : @options[:summary]
+      summ = @options[:summary] || @options[:description]
+      strip ? strip_string(summ, 300) : summ
     end
 
     # default media accessor
@@ -226,38 +248,18 @@ module SocialLinker
     # @return SocialLinker::Subject (self)
     def merge!(options)
       options = options.options if options.is_a? SocialLinker::Subject
+      options[:render_site_title_postfix] = true if options[:render_site_title_postfix].nil?
+      options[:u] ||= options[:url]
+      options[:media] ||= options[:image_url]
+      options[:title] ||= "#{ strip_string(options[:summary], 120) }"
+      options[:subject] ||= options[:title]
+      options[:via] ||= options[:twitter_username]
+      options[:url] ||= options[:media]
+      options[:text] = "#{options[:title]} #{options[:url]}" unless options[:text] #facebook & whatsapp native
+      options[:domain] = options[:url].split(/\//)[0..2].join("/") if options[:url] and !options[:domain]
+      options.select!{|k,v| !v.nil?}
       @options.merge!(options)
-      @options[:render_site_title_postfix] = true if @options[:render_site_title_postfix].nil?
-      @options[:u] = @options[:url] unless @options[:u]
-      @options[:media] = @options[:image_url] unless @options[:media]
-      @options[:description] = @options[:summary] unless @options[:description]
-      @options[:summary] = @options[:description] unless options[:summary]
-      @options[:title] = "#{ strip_string(@options[:summary], 120) }" unless @options[:title]
-      @options[:description] = @options[:title] unless @options[:description]
-      @options[:subject] = @options[:title] unless @options[:subject]
-      @options[:via] = @options[:twitter_username] unless @options[:via]
-      @options[:url] = @options[:media] unless @options[:url]
-      raise ArgumentError, "#{url} is not a valid url" if @options[:url] and !@options[:url].include?('//')
 
-      @options[:text] = "#{@options[:title]} #{@options[:url]}" unless @options[:text] #facebook & whatsapp native
-      @options[:canonical_url] = @options[:url]
-      @options[:share_url] = @options[:url]
-      @options[:domain] = @options[:url].split(/\//)[0..2].join("/") if @options[:url] and !@options[:domain]
-
-      if @options[:share_url] and utm_parameters
-        unless @options[:share_url].match /utm_source/
-          combine_with = @options[:share_url].match(/\?/) ? "&" : "?"
-          @options[:share_url] = "#{@options[:share_url]}#{combine_with}utm_source=<%=share_source%>"
-        end
-        unless @options[:share_url].match /utm_medium/
-          combine_with = "&"
-          @options[:share_url] = "#{@options[:share_url]}#{combine_with}utm_medium=share_link"
-        end
-        unless @options[:share_url].match /utm_campaign/
-          combine_with = "&"
-          @options[:share_url] = "#{@options[:share_url]}#{combine_with}utm_campaign=social"
-        end
-      end
       if @options[:tags]
         @options[:tags].compact!
         @options[:hashtags] = @options[:tags][0..1].collect{|a| camelize_tag_when_needed(a) }.join(",") if @options[:tags] and !@options[:hashtags]
@@ -265,8 +267,6 @@ module SocialLinker
 
       # make sure urls are absolute
       @options[:url] = prefix_domain(@options[:url],@options[:domain])
-      @options[:share_url] = prefix_domain(@options[:share_url],@options[:domain])
-      @options[:canonical_url] = prefix_domain(@options[:canonical_url],@options[:domain])
       @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
       @options[:media] = prefix_domain(@options[:media],@options[:domain])
 
@@ -282,14 +282,18 @@ module SocialLinker
     def body
       return options[:body] if options[:body]
       rv = ""
-      rv += "#{@options[:summary]}\n" if options[:summary]
-      rv += "\n#{@options[:share_url]}\n" if options[:share_url]
-      rv += "\n#{@options[:description]}\n" if options[:summary] != options[:description] and options[:description]
-      rv += "\n#{@options[:media]}\n" if options[:media] != options[:share_url] and options[:media]
+      rv += "#{summary}\n" if summary
+      rv += "\n#{share_url}\n" if share_url
+      rv += "\n#{description}\n" if summary != description and description
+      rv += "\n#{@options[:media]}\n" if options[:media] != share_url and options[:media]
       rv += "\n\n#{hashtag_string(@options[:tags])}" if options[:tags]
       rv.strip!
       rv = nil if rv == ""
       return rv
+    end
+
+    def description
+      @options[:description] || @options[:summary]
     end
 
     # Turns the first two tags in to tweetable hash tags
@@ -379,4 +383,3 @@ module SocialLinker
     end
   end
 end
-
