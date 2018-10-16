@@ -194,6 +194,7 @@ describe SocialLinker do
         tags: (["lots", "of", "tags"]).flatten.compact,
       })
       slb.merge!(title: "new title", description: "new description")
+      expect(slb.title).to eq("new title")
       expect(slb.summary).to eq("new description")
       expect(slb.summary(true)).to eq("new description")
       expect(slb.summary(false)).to eq("new description")
@@ -243,6 +244,15 @@ describe SocialLinker do
       slb = SocialLinker::Subject.new(url: "http://g.to", description: "kaas", tags: ["a", "b"])
       slb.merge!(tags: ["c", "d"])
       expect(slb.tags).to eq(["c", "d"])
+    end
+    it "doesn't rewrite title to nil empty" do
+      slb = SocialLinker::Subject.new(title: "kaas", url: "http://example.com/abc")
+      expect(slb.title).to eq("kaas")
+      slb.merge!(title: "kaas en bier")
+      expect(slb.title).to eq("kaas en bier")
+      slb.merge!({media: '/img.jpg'})
+      expect(slb.title).to eq("kaas en bier")
+      expect(slb.media).to eq("http://example.com/img.jpg")
     end
   end
 

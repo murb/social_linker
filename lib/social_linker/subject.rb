@@ -71,7 +71,7 @@ module SocialLinker
     #
     # @return String with url
     def url
-      @options[:url]
+      @options[:url] || image_url
     end
 
     def image_url
@@ -137,7 +137,7 @@ module SocialLinker
     # default title accessor
     # @return String with title
     def title
-      @options[:title]
+      @options[:title] || "#{ strip_string(options[:summary], 120) }"
     end
 
     # default summary accessor
@@ -249,12 +249,10 @@ module SocialLinker
     def merge!(options)
       options = options.options if options.is_a? SocialLinker::Subject
       options[:render_site_title_postfix] = true if options[:render_site_title_postfix].nil?
-      options[:u] ||= options[:url]
-      options[:media] ||= options[:image_url]
-      options[:title] ||= "#{ strip_string(options[:summary], 120) }"
-      options[:subject] ||= options[:title]
-      options[:via] ||= options[:twitter_username]
-      options[:url] ||= options[:media]
+      options[:u] ||= options[:url] if options[:url]
+      options[:media] ||= options[:image_url] if options[:image_url]
+      options[:subject] ||= options[:title] if options[:title]
+      options[:via] ||= options[:twitter_username] if options[:twitter_username]
       options[:text] = "#{options[:title]} #{options[:url]}" unless options[:text] #facebook & whatsapp native
       options[:domain] = options[:url].split(/\//)[0..2].join("/") if options[:url] and !options[:domain]
       options.select!{|k,v| !v.nil?}
