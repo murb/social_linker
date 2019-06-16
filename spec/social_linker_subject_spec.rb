@@ -169,7 +169,19 @@ describe SocialLinker do
       slb = SocialLinker::Subject.new(description: long_string, url: "http://g.to")
       expect(slb.description).to eq(long_string)
     end
-
+    it "should prefer summary over title" do
+      short_string = 10.times.collect{|a| "abcd a"}.join("")
+      long_string = 100.times.collect{|a| "abcd a"}.join("")
+      slb = SocialLinker::Subject.new(title: short_string, url: "http://g.to", summary: long_string)
+      expect(slb.description).to eq(long_string)
+    end
+    it "should prefer summary over title, even after merge" do
+      short_string = 10.times.collect{|a| "abcd a"}.join("")
+      long_string = 100.times.collect{|a| "abcd a"}.join("")
+      slb = SocialLinker::Subject.new(title: short_string, url: "http://g.to")
+      slb = slb.merge!(summary: long_string)
+      expect(slb.description).to eq(long_string)
+    end
   end
 
   describe "#summary" do
