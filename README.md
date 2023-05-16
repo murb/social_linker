@@ -193,6 +193,14 @@ example code of how to access image-assets in the icon
       <use xlink:href="<%=image_path('social_linker/icons.svg')%>#icon-facebook"></use>
     </svg>
 
+When the `assets/config/manifest.js` file is present, you have to include it:
+
+    //= link social_linker/icons.svg
+
+Previous versions required you to add the icons.svg tot the assets initializers
+
+     Rails.application.config.assets.precompile += %w( images/social_linker/icons.svg )
+
 *Note:* If you just want the SVG icon standalone, you can also use the `social_link_to_image`
 view helper:
 
