@@ -2,6 +2,7 @@ $google-color: #E0492F;
 $facebook-color: #395697;
 $linkedin-color: #0077B5;
 $twitter-color: #1DA1F2;
+$mastodon-color: #563ACC;
 
 .icon {
 	display: inline-block;
@@ -79,7 +80,6 @@ Example showing how to change the color/size of the icons:
 }
 .icon-tumblr {
   width: 0.609375em;
-
 }
 
 // Foundation/Bootstrap styles
@@ -100,6 +100,13 @@ Example showing how to change the color/size of the icons:
     color: #fff;
     &:hover {
       background-color: darken($facebook-color,10);
+    }
+  }
+  &.mastodon {
+    background-color: $mastodon-color;
+    color: #fff;
+    &:hover {
+      background-color: darken($mastodon-color,10);
     }
   }
   &.twitter {

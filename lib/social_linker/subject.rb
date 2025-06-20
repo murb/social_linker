@@ -41,6 +41,10 @@ module SocialLinker
       whatsapp: {
         base: "whatsapp://send?",
         params: [:text]
+      },
+      mastodon: {
+        base: "https://mastodonshare.com/?",
+        params: {text: :mastodon_text_with_url_and_hashtags}
       }
 
     }

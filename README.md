@@ -129,6 +129,7 @@ Currently support is available for the following ways of sharing:
     :google
     :linkedin
     :whatsapp
+    :mastodon
 
 Or to save you the copy-paste:
 
@@ -261,4 +262,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/murb/s
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

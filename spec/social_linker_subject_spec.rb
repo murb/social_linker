@@ -135,6 +135,10 @@ describe SocialLinker do
         slb = SocialLinker::Subject.new(media: "img", url: "http://example.com", title: "Mooi recept", description: "Met een heerlijke saus!")
         expect(slb.share_link(:google)).to eq("https://plus.google.com/share?url=http%3A%2F%2Fexample.com%3Futm_source%3Dgoogle%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
       end
+      it "should work for :mastodon" do
+        slb = SocialLinker::Subject.new(media: "img", url: "http://example.com", title: "Mooi recept", description: "Met een heerlijke saus!")
+        expect(slb.share_link(:mastodon)).to eq("https://mastodonshare.com/?text=%E2%80%9CMooi%20recept%E2%80%9D%0A%0Ahttp%3A%2F%2Fexample.com%3Futm_source%3Dmastodon%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial")
+      end
     end
   end
 

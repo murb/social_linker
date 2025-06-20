@@ -69,6 +69,7 @@ module ViewHelpers
 
     header_html << meta_tag("twitter:site", options[:twitter_username])
     header_html << meta_tag("twitter:creator", options[:twitter_username])
+    header_html << meta_tag("fediverse:creator", options[:fediverse_account])
     header_html << tag_if(:link, {href: "https://plus.google.com/+#{options[:google_plus_name]}", rel: "publisher"}, :href) if options[:google_plus_name]
     header_html << meta_tag("twitter:domain", domain)
     header_html << meta_tag("Content-Language", language)

@@ -64,13 +64,15 @@ describe SocialLinker do
           media_height: 400,
           summary: "short summary",
           tags: ["key1", "key2"],
-          twitter_username: "murb"
+          twitter_username: "murb",
+          fediverse_account: "@murb@todon.nl"
         )
         options = {
           site_title_postfix: "murb.nl"
         }
         expected_result = '<meta name="twitter:site" content="murb" />
 <meta name="twitter:creator" content="murb" />
+<meta name="fediverse:creator" content="@murb@todon.nl" />
 <meta name="twitter:domain" content="https://murb.nl" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="og:url" content="https://murb.nl/blog" />
