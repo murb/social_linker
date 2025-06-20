@@ -1,7 +1,8 @@
 # frozen_string_literal: true
-require 'spec_helper'
-$LOAD_PATH.unshift File.expand_path('../../app', __FILE__)
-require 'helpers/view_helpers'
+
+require "spec_helper"
+$LOAD_PATH.unshift File.expand_path("../../app", __FILE__)
+require "helpers/view_helpers"
 
 class SimulatedActionView
   include ViewHelpers
@@ -9,8 +10,6 @@ class SimulatedActionView
     yield
   end
 end
-
-
 
 describe SocialLinker do
   describe ViewHelpers do
@@ -31,15 +30,15 @@ describe SocialLinker do
 
     describe "header_meta_tags" do
       it "should do basic tags when empty" do
-        expect(SimulatedActionView.new.header_meta_tags(nil,{})).to eq("<title></title>")
+        expect(SimulatedActionView.new.header_meta_tags(nil, {})).to eq("<title></title>")
         subject = SocialLinker::Subject.new
-        expect(SimulatedActionView.new.header_meta_tags(subject,{})).to eq("<meta name=\"twitter:card\" content=\"summary\" />\n<title></title>")
+        expect(SimulatedActionView.new.header_meta_tags(subject, {})).to eq("<meta name=\"twitter:card\" content=\"summary\" />\n<title></title>")
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog",
           summary: "short summary",
           tags: ["key1", "key2"],
-          twitter_username: 'murb'
+          twitter_username: "murb"
         )
         expected_result = '<meta name="twitter:site" content="murb" />
 <meta name="twitter:creator" content="murb" />
@@ -56,7 +55,7 @@ describe SocialLinker do
 <meta name="twitter:title" content="title" />
 <meta property="og:title" content="title" />
 <meta itemprop="name" content="title" />'
-        expect(SimulatedActionView.new.header_meta_tags(subject,{})).to eq(expected_result)
+        expect(SimulatedActionView.new.header_meta_tags(subject, {})).to eq(expected_result)
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog",
@@ -65,7 +64,7 @@ describe SocialLinker do
           media_height: 400,
           summary: "short summary",
           tags: ["key1", "key2"],
-          twitter_username: 'murb'
+          twitter_username: "murb"
         )
         options = {
           site_title_postfix: "murb.nl"
@@ -92,8 +91,7 @@ describe SocialLinker do
 <meta property="og:title" content="title" />
 <meta property="og:site_name" content="murb.nl" />
 <meta itemprop="name" content="title - murb.nl" />'
-        expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
-
+        expect(SimulatedActionView.new.header_meta_tags(subject, options)).to eq(expected_result)
       end
       it "should hide postprefix if set to do so" do
         subject = SocialLinker::Subject.new(
@@ -113,13 +111,13 @@ describe SocialLinker do
 <meta property="og:title" content="title" />
 <meta property="og:site_name" content="murb.nl" />
 <meta itemprop="name" content="title" />'
-        expect(SimulatedActionView.new.header_meta_tags(subject,options)).to eq(expected_result)
+        expect(SimulatedActionView.new.header_meta_tags(subject, options)).to eq(expected_result)
       end
       it "should be able to set title postfix if set to do so" do
         subject = SocialLinker::Subject.new(
           title: "title",
           site_title_postfix: "murb.nl",
-          url: "https://murb.nl/blog",
+          url: "https://murb.nl/blog"
         )
         expected_result = '<meta name="twitter:domain" content="https://murb.nl" />
 <meta name="twitter:card" content="summary" />
@@ -135,10 +133,10 @@ describe SocialLinker do
     end
     describe "#social_link_to_image" do
       it "should return nil if no network or image path is given" do
-        expect(SimulatedActionView.new.social_link_to_image(nil,nil)).to eq(nil)
+        expect(SimulatedActionView.new.social_link_to_image(nil, nil)).to eq(nil)
       end
       it "should return an svg" do
-        expect(SimulatedActionView.new.social_link_to_image(:facebook,"svg_path")).to eq("<svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"svg_path#icon-facebook\"></use></svg>")
+        expect(SimulatedActionView.new.social_link_to_image(:facebook, "svg_path")).to eq("<svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"svg_path#icon-facebook\"></use></svg>")
       end
     end
 
@@ -154,14 +152,13 @@ describe SocialLinker do
       it "checks content by default" do
         expect(SimulatedActionView.new.tag_if(:meta, {a: 2, b: 2})).to eq nil
         expect(SimulatedActionView.new.tag_if(:meta, {content: 2, b: 2})).to eq "<meta content=\"2\" b=\"2\" />"
-
       end
     end
 
     describe "#social_link_to" do
       it "should return an error when no subject is given" do
-        expect{
-          SimulatedActionView.new.social_link_to(nil,nil)
+        expect {
+          SimulatedActionView.new.social_link_to(nil, nil)
         }.to raise_error(ArgumentError)
       end
       it "should return an error when no network is given" do
@@ -169,8 +166,8 @@ describe SocialLinker do
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect{
-          SimulatedActionView.new.social_link_to(subject,nil)
+        expect {
+          SimulatedActionView.new.social_link_to(subject, nil)
         }.to raise_error(ArgumentError)
       end
       it "should return return a share link" do
@@ -178,22 +175,22 @@ describe SocialLinker do
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect(SimulatedActionView.new.social_link_to(subject,:facebook)).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+        expect(SimulatedActionView.new.social_link_to(subject, :facebook)).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
       it "should return return a share link with a button class if given" do
         subject = SocialLinker::Subject.new(
           title: "title",
-          url: "https://murb.nl/blog",
+          url: "https://murb.nl/blog"
         )
-        a = SimulatedActionView.new.social_link_to(subject,:facebook, {class: :button})
+        a = SimulatedActionView.new.social_link_to(subject, :facebook, {class: :button})
         expect(a).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"button facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
       it "should return return a share link with a button classes if given" do
         subject = SocialLinker::Subject.new(
           title: "title",
-          url: "https://murb.nl/blog",
+          url: "https://murb.nl/blog"
         )
-        a = SimulatedActionView.new.social_link_to(subject,:facebook, {class: [:button, :share]})
+        a = SimulatedActionView.new.social_link_to(subject, :facebook, {class: [:button, :share]})
         expect(a).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"button share facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
       it "should return return a share link when a block is given" do
@@ -201,17 +198,15 @@ describe SocialLinker do
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect(SimulatedActionView.new.social_link_to(subject,:facebook){ "Facebook" }).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"facebook\" title=\"Facebook\">Facebook</a>")
+        expect(SimulatedActionView.new.social_link_to(subject, :facebook) { "Facebook" }).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" target=\"_blank\" class=\"facebook\" title=\"Facebook\">Facebook</a>")
       end
       it "should return return a share link without target blank when told to do so" do
         subject = SocialLinker::Subject.new(
           title: "title",
           url: "https://murb.nl/blog"
         )
-        expect(SimulatedActionView.new.social_link_to(subject,:facebook, {target_blank: false})).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
+        expect(SimulatedActionView.new.social_link_to(subject, :facebook, {target_blank: false})).to eq("<a href=\"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmurb.nl%2Fblog%3Futm_source%3Dfacebook%26utm_medium%3Dshare_link%26utm_campaign%3Dsocial\" class=\"facebook\" title=\"Facebook\"><svg class=\"icon icon-facebook icon-default-style\"><title>Facebook</title><use xlink:href=\"social_linker/icons.svg#icon-facebook\"></use></svg></a>")
       end
     end
   end
-
-
 end

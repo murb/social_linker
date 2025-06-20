@@ -1,14 +1,14 @@
 # frozen_string_literal: true
+
 module SocialLinker
   class Subject
-
     # Constant defining how the different share-url's look like and their parameters;
     # the parameters can be set in the options directly, or will be derived from more
     # generic options
     SHARE_TEMPLATES = {
       email: {
         base: "mailto:emailaddress?",
-        params: [:subject,:body,:cc,:bcc]
+        params: [:subject, :body, :cc, :bcc]
       },
       pinterest: {
         base: "https://pinterest.com/pin/create/button/?",
@@ -28,7 +28,7 @@ module SocialLinker
       },
       twitter_native: {
         base: "twitter://post?",
-        params: {message: :twitter_text_with_url_and_hashags}
+        params: {message: :twitter_text_with_url_and_hashtags}
       },
       facebook: {
         base: "https://www.facebook.com/sharer/sharer.php?",
@@ -50,9 +50,8 @@ module SocialLinker
     # @param [Array] tags to be converted to string
     # @return [String] containing a Twitter-style tag-list
     def hashtag_string(tags)
-      if tags and tags.count > 0
-        tags = tags.collect{|a| camelize_tag_when_needed(a) }
-        "##{tags.collect{|a| a.to_s.strip.gsub('#','')}.join(" #")}"
+      if tags&.count&.> 0
+        tags.map { |a| "##{camelize_tag_when_needed(a.to_s.delete("#")).strip}" }.join(" ")
       else
         ""
       end
@@ -63,8 +62,7 @@ module SocialLinker
     # @param [String] tag to might need conversion
     # @return [String] fixed tag
     def camelize_tag_when_needed(tag)
-      tag = tag.to_s
-      tag.match(/\s/) ? tag.split(/\s/).collect{|a| a.capitalize}.join("") : tag
+      /\s/.match?(tag) ? tag.split(/\s/).collect { |a| a.capitalize }.join("") : tag
     end
 
     # default url accessor
@@ -98,15 +96,15 @@ module SocialLinker
     end
 
     def media_width
-      media_dimensions[:width].to_i if media_dimensions[:width]
+      media_dimensions[:width]&.to_i
     end
 
     def media_height
-      media_dimensions[:height].to_i if media_dimensions[:height]
+      media_dimensions[:height]&.to_i
     end
 
     def utm_parameters?
-      [nil, true].include?(@options[:utm_parameters]) ? true : false
+      [nil, true].include?(@options[:utm_parameters])
     end
 
     def utm_parameters
@@ -126,23 +124,23 @@ module SocialLinker
     def share_url
       url_to_share = prefix_domain((@options[:share_url] || @options[:url]), @options[:domain])
       if utm_parameters?
-        utm_url_params = utm_parameters.collect{|k,v| "#{k}=#{v}" unless url_to_share.match(k.to_s)}.compact.join("&")
-        combine_with = url_to_share.match(/\?/) ? "&" : "?"
-        return "#{url_to_share}#{combine_with}#{utm_url_params}"
+        utm_url_params = utm_parameters.collect { |k, v| "#{k}=#{v}" unless url_to_share.match(k.to_s) }.compact.join("&")
+        combine_with = /\?/.match?(url_to_share) ? "&" : "?"
+        "#{url_to_share}#{combine_with}#{utm_url_params}"
       else
-        return url_to_share
+        url_to_share
       end
     end
 
     # default title accessor
     # @return String with title
     def title
-      @options[:title] || "#{ strip_string(options[:summary], 120) }"
+      @options[:title] || strip_string(options[:summary], 120)
     end
 
     # default summary accessor
     # @return String with summary
-    def summary(strip=false)
+    def summary(strip = false)
       summ = @options[:summary] || @options[:description]
       strip ? strip_string(summ, 300) : summ
     end
@@ -156,7 +154,7 @@ module SocialLinker
     def filename_derived_image_type
       if media
         extension = media.to_s.split(".").last.downcase
-        if extension == "jpg" or extension == "jpeg"
+        if extension == "jpg" || extension == "jpeg"
           "image/jpeg"
         elsif extension == "png"
           "image/png"
@@ -173,7 +171,7 @@ module SocialLinker
     # default tags accessor
     # @return Array<String> with tags
     def tags
-      @options[:tags] ? @options[:tags] : []
+      @options[:tags] || []
     end
 
     def hashtags
@@ -183,21 +181,21 @@ module SocialLinker
     # puts quotes around a string
     # @return [String] now with quotes.
     def quote_string(string)
-      "“#{string}”" if string and string.to_s.strip != ""
+      "“#{string}”" if string.to_s.strip != ""
     end
 
     # strips a string to the max length taking into account quoting
     # @param [String] string that is about to be shortened
     # @param [Integer] max_length of the string to be shortened (default 100)
     # @return [String] shortened to the max lenght
-    def strip_string(string, max_length=100)
-      if string and string.length > max_length
-        elipsis = "…"
+    def strip_string(string, max_length = 100)
+      if string&.length&.> max_length
+        ellipsis = "…"
         if string[-1] == "”"
-          elipsis = "#{elipsis}”"
+          ellipsis = "#{ellipsis}”"
         end
-        max_char = max_length-1-elipsis.length
-        string = string[0..max_char]+elipsis
+        max_char = max_length - 1 - ellipsis.length
+        string = string[0..max_char] + ellipsis
       end
       string
     end
@@ -221,10 +219,10 @@ module SocialLinker
     # `utm_parameters: false`
     #
     # @params [Hash] options as defined above
-    def initialize(options={})
+    def initialize(options = {})
       # basic option syncing
       @options = {}
-      self.merge!(options)
+      merge!(options)
     end
 
     # Merges existing SocialLinker::Subject with a (potentially limited set of)
@@ -253,23 +251,23 @@ module SocialLinker
       options[:media] ||= options[:image_url] if options[:image_url]
       options[:subject] ||= options[:title] if options[:title]
       options[:via] ||= options[:twitter_username] if options[:twitter_username]
-      options[:text] = "#{options[:title]} #{options[:url]}" unless options[:text] #facebook & whatsapp native
-      options[:domain] = options[:url].split(/\//)[0..2].join("/") if options[:url] and !options[:domain]
-      options.select!{|k,v| !v.nil?}
+      options[:text] = "#{options[:title]} #{options[:url]}" unless options[:text] # facebook & whatsapp native
+      options[:domain] = options[:url].split("/")[0..2].join("/") if options[:url] && !options[:domain]
+      options.select! { |k, v| !v.nil? }
       @options.merge!(options)
 
       if @options[:tags]
         @options[:tags].compact!
-        @options[:hashtags] = @options[:tags][0..1].collect{|a| camelize_tag_when_needed(a) }.join(",") if @options[:tags] and !@options[:hashtags]
+        @options[:hashtags] = @options[:tags][0..1].collect { |a| camelize_tag_when_needed(a) }.join(",") if @options[:tags] && !@options[:hashtags]
       end
 
       # make sure urls are absolute
-      @options[:url] = prefix_domain(@options[:url],@options[:domain])
-      @options[:image_url] = prefix_domain(@options[:image_url],@options[:domain])
-      @options[:media] = prefix_domain(@options[:media],@options[:domain])
+      @options[:url] = prefix_domain(@options[:url], @options[:domain])
+      @options[:image_url] = prefix_domain(@options[:image_url], @options[:domain])
+      @options[:media] = prefix_domain(@options[:media], @options[:domain])
 
-      @options.each do |k,v|
-        @options[k] = v.strip if v and v.is_a? String
+      @options.each do |k, v|
+        @options[k] = v.strip if v.is_a? String
       end
       self
     end
@@ -282,66 +280,71 @@ module SocialLinker
       rv = ""
       rv += "#{summary}\n" if summary
       rv += "\n#{share_url}\n" if share_url
-      rv += "\n#{description}\n" if summary != description and description
-      rv += "\n#{@options[:media]}\n" if options[:media] != share_url and options[:media]
+      rv += "\n#{description}\n" if summary != description && description
+      rv += "\n#{@options[:media]}\n" if options[:media] != share_url && options[:media]
       rv += "\n\n#{hashtag_string(@options[:tags])}" if options[:tags]
       rv.strip!
       rv = nil if rv == ""
-      return rv
+      rv
     end
 
     def description
       @options[:description] || @options[:summary]
     end
 
-    # Turns the first two tags in to tweetable hash tags
+    # Turns the first two tags in to "tweetable" hash tags
     # Conform recommendation never to have more than 2 tags in a twitter message
     # @return String with two tags as #tags.
     def twitter_hash_tags
       options[:tags] ? hashtag_string(options[:tags][0..1]) : ""
     end
 
-    # Generatess the text to tweet (Twitter)
+    # Generates the text to tweet (Twitter)
     # @return String with text to tweet
     def twitter_text
       return options[:twitter_text] if options[:twitter_text]
       return options[:tweet_text] if options[:tweet_text]
 
-      max_length = 140 - (twitter_hash_tags.length + 12 + 4) #hashstring + url length (shortened) + spaces
-      "#{quote_string(strip_string(@options[:title],max_length))}"
+      max_length = 140 - (twitter_hash_tags.length + 12 + 4) # hashstring + url length (shortened) + spaces
+      quote_string(strip_string(@options[:title], max_length))
     end
 
     # Generates a full twitter message includig url and hashtags
     # @return String with full twitter message (typically for native app)
-    def twitter_text_with_url_and_hashags
-      return options[:twitter_text_with_url_and_hashags] if options[:twitter_text_with_url_and_hashags]
+    def twitter_text_with_url_and_hashtags
+      return options[:twitter_text_with_url_and_hashtags] if options[:twitter_text_with_url_and_hashtags]
       return options[:message] if options[:message]
       return options[:status] if options[:status]
-      [twitter_text,twitter_hash_tags,share_url].delete_if{|a| a.nil? or a.empty?}.join(" ")
+      [twitter_text, twitter_hash_tags, share_url].delete_if { |a| a.nil? or a.empty? }.join(" ")
     end
-    alias_method :status, :twitter_text_with_url_and_hashags
+    alias_method :status, :twitter_text_with_url_and_hashtags
+
+    def mastodon_text_with_url_and_hashtags
+      return options[:twitter_text_with_url_and_hashtags] if options[:twitter_text_with_url_and_hashtags]
+      return options[:message] if options[:message]
+      return options[:status] if options[:status]
+      [twitter_text, share_url, twitter_hash_tags].delete_if { |a| a.nil? or a.empty? }.join("\n\n")
+    end
 
     # It is assumed that paths are relative to the domainname if none is given
     # @param [String] path to file (if it is already a full url, it will be passed along)
     # @param [String] domain of the file
     # @return String with full url
     def prefix_domain path, domain
-      if path and !path.include?("//")
-        return [
-          domain.gsub(/\/$/,''),
-          path.gsub(/^\//,'')
+      if path && !path.include?("//")
+        [
+          domain.gsub(/\/$/, ""),
+          path.gsub(/^\//, "")
         ].join("/")
       else
-        return path
+        path
       end
     end
 
     # Returns the given options, extended with the (derived) defaults
     #
     # @return Hash with the options
-    def options
-      @options
-    end
+    attr_reader :options
 
     # Generates a share link for each of the predefined platforms in the `SHARE_TEMPLATES` constant
     #
@@ -351,17 +354,17 @@ module SocialLinker
       raise "No share template defined" unless share_options
 
       url_params = {}
-      share_options[:params].each do |k,v|
-        value_key = v||k #smartassery; v = nil for arrays
+      share_options[:params].each do |k, v|
+        value_key = v || k # smartassery; v = nil for arrays
         value = options[value_key]
-        value = self.send(value_key) if self.methods.include?(value_key)
-        if value and value.to_s.strip != ""
-          value = value.gsub('<%=share_source%>', platform.to_s)
+        value = send(value_key) if methods.include?(value_key)
+        if value.to_s.strip != ""
+          value = value.gsub("<%=share_source%>", platform.to_s)
           url_params[k] = value
         end
       end
 
-      return share_options[:base]+url_params.collect{|k,v| "#{k}=#{url_encode(v)}"}.join('&')
+      share_options[:base] + url_params.collect { |k, v| "#{k}=#{url_encode(v)}" }.join("&")
     end
 
     def url_encode(v)
@@ -369,12 +372,12 @@ module SocialLinker
     end
 
     # Catches method missing and tries to resolve them in either an appropriate share link or option value
-    def method_missing(m,*args)
+    def method_missing(m, *args)
       share_link_matcher = m.to_s.match(/([a-z]*)_share_link/)
       if share_link_matcher
-        return share_link(share_link_matcher[1].to_sym)
+        share_link(share_link_matcher[1].to_sym)
       elsif options[m]
-        return options[m]
+        options[m]
       else
         super
       end

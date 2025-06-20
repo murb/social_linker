@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ViewHelpers
   # renders a metatag
   # param [String, Symbol] name (or property) (defaults to name, values starting with 'og:' (opengraph) will be using the property attribute)
@@ -6,12 +7,12 @@ module ViewHelpers
   # @returns [String, nil] nil is returned when the content is empty
   def meta_tag(name, content)
     key_value_pairs = {}
-    name_or_property_attribute = if (name.start_with?("og:") or name.start_with?("fb:"))
-        "property"
-      elsif ['Content-Language'].include? name
-        "http-equiv"
-      else
-        "name"
+    name_or_property_attribute = if name.start_with?("og:", "fb:")
+      "property"
+    elsif ["Content-Language"].include? name
+      "http-equiv"
+    else
+      "name"
     end
     key_value_pairs[name_or_property_attribute] = name
     key_value_pairs[:content] = content
@@ -23,14 +24,14 @@ module ViewHelpers
   # param [Hash] key value pairs (the attributes and their corresponding values
   # param [String, Symbol] if_key is the key to be checked for containing a value, otherwise nil is returned, defaults to :content
   # @returns [String, nil] nil is returned when the if_key is empty
-  def tag_if(tagname, key_value_pairs, if_key=:content)
+  def tag_if(tagname, key_value_pairs, if_key = :content)
     tag = tagname.to_sym
     critical_value = key_value_pairs[if_key]
-    if critical_value and critical_value.to_s.strip != ""
-      attribs = key_value_pairs.collect do |k,v|
+    if critical_value.to_s.strip != ""
+      attribs = key_value_pairs.collect do |k, v|
         key = erb_sanitized(k)
         value = erb_sanitized(v)
-        rv = "#{key}=\"#{value}\""
+        "#{key}=\"#{value}\""
       end.join(" ")
       "<#{tag} #{attribs} />"
     end
@@ -49,7 +50,7 @@ module ViewHelpers
   # @param [SocialLinker::Subject] the SocialLinker::Subject initialized as complete as possible
   # @param [Hash] options with site-defaults for `:site_title_postfix`, (e.g. article title - {site title postfix here}), `:domain` (the main url). These options are overridden by the subject if set by the subject.
   # @return String of tags (possibly marked as sanitized when available)
-  def header_meta_tags subject, options={}
+  def header_meta_tags subject, options = {}
     options = options.merge(subject.options) if subject
 
     site_title_postfix = options[:site_title_postfix]
@@ -109,7 +110,6 @@ module ViewHelpers
     header_html << meta_tag("og:site_name", site_name)
     header_html << tag_if(:meta, {itemprop: :name, content: site_title}, :content)
 
-
     header_html.compact!
     header_html = header_html.join("\n") if header_html
 
@@ -124,15 +124,15 @@ module ViewHelpers
   # * social_icons_image_path (defaults to the default SocialLinker iconset)
   # * title (the title attribute, defaults to the network's name capitalized)
 
-  def social_link_to_image(network, image_path=nil)
-    if image_path == nil
-      image_path = asset_path("social_linker/icons.svg") if self.methods.include?(:image_path)
+  def social_link_to_image(network, image_path = nil)
+    if image_path.nil?
+      image_path = asset_path("social_linker/icons.svg") if methods.include?(:image_path)
     end
 
-    if network and image_path
-      html = "<svg class=\"icon icon-#{network} icon-default-style\"><title>#{network.capitalize}</title><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
+    if network && image_path
+      "<svg class=\"icon icon-#{network} icon-default-style\"><title>#{network.capitalize}</title><use xlink:href=\"#{image_path}#icon-#{network}\"></use></svg>"
       # html = html.html_safe if html.methods.include?(:html_safe)
-      html
+
     end
   end
 
@@ -154,18 +154,18 @@ module ViewHelpers
     raise ArgumentError, "subject can't be nil" unless subject
     raise ArgumentError, "network can't be nil" unless network
     options_with_defaults = {
-      social_icons_asset_path: 'social_linker/icons.svg',
+      social_icons_asset_path: "social_linker/icons.svg",
       title: network.to_s.capitalize,
-      target_blank: true,
+      target_blank: true
     }.merge(options)
 
     link_content = network
 
     if block_given?
-      link_content = capture{ yield }
+      link_content = capture { yield }
     else
       social_icons_asset_path = options_with_defaults[:social_icons_asset_path]
-      social_icons_asset_path = asset_path(social_icons_asset_path) if self.methods.include?(:image_path)
+      social_icons_asset_path = asset_path(social_icons_asset_path) if methods.include?(:image_path)
 
       link_content = social_link_to_image(network, social_icons_asset_path)
     end
@@ -177,5 +177,4 @@ module ViewHelpers
     html = html.html_safe if html.methods.include?(:html_safe)
     html
   end
-
 end
