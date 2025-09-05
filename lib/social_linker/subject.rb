@@ -122,11 +122,11 @@ module SocialLinker
     end
 
     def canonical_url
-      prefix_domain((@options[:canonical_url] || @options[:url]), @options[:domain])
+      prefix_domain(@options[:canonical_url] || @options[:url], @options[:domain])
     end
 
     def share_url
-      url_to_share = prefix_domain((@options[:share_url] || @options[:url]), @options[:domain])
+      url_to_share = prefix_domain(@options[:share_url] || @options[:url], @options[:domain])
       if utm_parameters?
         utm_url_params = utm_parameters.collect { |k, v| "#{k}=#{v}" unless url_to_share.match(k.to_s) }.compact.join("&")
         combine_with = /\?/.match?(url_to_share) ? "&" : "?"

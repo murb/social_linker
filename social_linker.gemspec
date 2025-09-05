@@ -21,4 +21,5 @@ Supported networks are: Twitter, Facebook, LinkedIn, Google+, Pinterest, and ema
   spec.add_development_dependency "bundler", "> 2"
   spec.add_development_dependency "rake", "> 11 "
   spec.add_development_dependency "rspec", "> 3"
+  spec.add_development_dependency "standard", "> 1"
 end
