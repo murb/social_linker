@@ -2,7 +2,6 @@
 
 require "social_linker/version"
 require "social_linker/subject"
-require "social_linker/view_helpers"
 require "social_linker/engine" if defined?(Rails)
 
 # SocialLinker
