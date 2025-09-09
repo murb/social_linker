@@ -44,12 +44,24 @@ social_linker_subject = SocialLinker::Subject.new(media: "http://example.com/img
 You'll get the e-mail share url by calling:
 
 ```ruby
-social_linker_subject.share_link(:mail)
+social_linker_subject.share_link(:email)
 ```
 
 Which will deliver you the following url:
 
     mailto:emailaddress?subject=Example%20website&body=Example.com%20is%20the%20typical%20URL%20you%20would%20want%20to%20use%20in%20explanations%20anyway.%0A%0Ahttp%3A%2F%2Fexample.com%2F
+
+Subsequently you can do:
+
+```
+social_linker_subject.share_link(:pinterest)
+social_linker_subject.share_link(:linkedin)
+social_linker_subject.share_link(:google)
+social_linker_subject.share_link(:twitter)
+social_linker_subject.share_link(:facebook)
+social_linker_subject.share_link(:whatsapp)
+social_linker_subject.share_link(:mastodon)
+```
 
 ### Setting up the subject
 
@@ -120,29 +132,48 @@ ApplicationController. Later on you can merge details into this subject:
 
 Currently support is available for the following ways of sharing:
 
-    :email
-    :facebook
-    :facebook_native
-    :twitter
-    :twitter_native
-    :pinterest
-    :google
-    :linkedin
-    :whatsapp
-    :mastodon
-
-Or to save you the copy-paste:
-
-[TestMailLink](mailto:emailaddress?subject=Example%20website&body=Example.com%20is%20the%20typical%20URL%20you%20would%20want%20to%20use%20in%20explanations%20anyway.%0A%0Ahttp%3A%2F%2Fexample.com%2F)
-
+* `:email`
+* `:facebook`
+* `:facebook_native`
+* `:twitter`
+* `:twitter_native`
+* `:pinterest`
+* `:google`
+* `:linkedin`
+* `:whatsapp`
+* `:mastodon`
 
 #### UTM Campaign parameters
 
 By default [utm campaign parameters](https://support.google.com/analytics/answer/1033863?hl=en) are added when they are not present. You can turn this off by passing the option: `utm_parameters: false`.
 
-#### Link helper with SVG icons (Rails)
+### View helpers
 
-Use the following to create a sharelink to Facebook
+These view helpers have been tested with Rails and Nanoc. For Nanoc it is required that you add the following lines to `default.rb`:
+
+require 'social_linker'
+include ::SocialLinker::ViewHelpers
+
+#### Meta-Headers
+
+When using Ruby on Rails a few helpers have been created.
+
+
+Just set the following, which should give you a reasonable default.
+
+    header_meta_tags(@subject, {
+      site_title_postfix: "your sitename" # optional
+    })
+
+Alternatively you can also set the `site_title_post` in the `Subject` directly,
+as suggested in an earlier section:
+
+    header_meta_tags(@subject)
+
+
+#### Link helper with SVG icons (Rails only)
+
+Use the following to create a share link to Facebook
 
     social_link_to @subject, :facebook
 
@@ -165,26 +196,7 @@ the following line to the head of your application.ccs file:
 
     *= require social_linker/icons
 
-
-### Meta-Headers
-
-When using Ruby on Rails a few helpers have been created.
-
-
-Just set the following, which should give you a reasonable default.
-
-    header_meta_tags(@subject, {
-      site_title_postfix: "your sitename" # optional
-    })
-
-Alternatively you can also set the `site_title_post` in the `Subject` directly,
-as suggested in an earlier section:
-
-    header_meta_tags(@subject)
-
-## Advanced
-
-### Reuse the SVG icons elsewhere
+#### Reuse the SVG icons elsewhere (Rails only)
 
 When integrating social icons into your site, you might also want to include login options
 for these social networks, or access the icons for other reasons. Below is 'standard'
