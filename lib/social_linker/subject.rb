@@ -80,6 +80,10 @@ module SocialLinker
       @options[:image_url]
     end
 
+    def image_url= url
+      @options[:image_url] = url
+    end
+
     def media_dimensions
       return @media_dimensions if @media_dimensions
       if media
@@ -103,8 +107,20 @@ module SocialLinker
       media_dimensions[:width]&.to_i
     end
 
+    def media_width= width
+      @media_dimensions ||= media_dimensions
+      @media_dimensions[:width] = width.to_i
+      @options[:media_width] = width.to_i
+    end
+
     def media_height
       media_dimensions[:height]&.to_i
+    end
+
+    def media_height= height
+      @media_dimensions ||= media_dimensions
+      @media_dimensions[:height] = height.to_i
+      @options[:media_height] = height.to_i
     end
 
     def utm_parameters?

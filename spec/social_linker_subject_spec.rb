@@ -302,6 +302,39 @@ describe SocialLinker do
     end
   end
 
+  describe "media_dimensions" do
+    let(:slb) { SocialLinker::Subject.new(url: "http://g.to", message: "kaas", media_dimensions: [400, 200], image_url: "http://example.com/image.png") }
+    it "returns media_dimensions set during init" do
+      expect(slb.media_dimensions).to eq({width: 400, height: 200})
+    end
+  end
+
+  describe "media_width(=)" do
+    let(:slb) { SocialLinker::Subject.new(url: "http://g.to", message: "kaas", media_dimensions: [400, 200], image_url: "http://example.com/image.png") }
+    it "returns media_width set during init" do
+      expect(slb.media_width).to eq(400)
+    end
+
+    it "updates media_width" do
+      slb.media_width = 300
+      expect(slb.media_width).to eq(300)
+      expect(slb.media_dimensions).to eq({width: 300, height: 200})
+    end
+  end
+
+  describe "media_height(=)" do
+    let(:slb) { SocialLinker::Subject.new(url: "http://g.to", message: "kaas", media_dimensions: [400, 200], image_url: "http://example.com/image.png") }
+    it "returns media_height set during init" do
+      expect(slb.media_height).to eq(200)
+    end
+
+    it "updates media_height" do
+      slb.media_height = 300
+      expect(slb.media_height).to eq(300)
+      expect(slb.media_dimensions).to eq({width: 400, height: 300})
+    end
+  end
+
   describe "#filename_derived_image_type" do
     it "should return nil when no image" do
       slb = SocialLinker::Subject.new(url: "http://g.to", message: "kaas")
