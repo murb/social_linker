@@ -43,7 +43,7 @@ module SocialLinker
         params: [:text]
       },
       mastodon: {
-        base: "https://mastodonshare.com/?",
+        base: "https://share.joinmastodon.org/?",
         params: {text: :mastodon_text_with_url_and_hashtags}
       }
 
