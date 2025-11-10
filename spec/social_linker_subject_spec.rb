@@ -213,6 +213,20 @@ describe SocialLinker do
       expect(slb.summary(true)).to eq("new description")
       expect(slb.summary(false)).to eq("new description")
     end
+
+    it "can be set" do
+      slb = SocialLinker::Subject.new({
+        facebook_app_id: 123123,
+        title: "title",
+        url: "http://example.com",
+        media: "http://example.com/image.jpg",
+        twitter_username: "murb",
+        description: "long and old description",
+        tags: ["lots", "of", "tags"].flatten.compact
+      })
+      slb.summary = "short summary"
+      expect(slb.summary).to eq "short summary"
+    end
   end
 
   describe "#merge!" do

@@ -159,10 +159,15 @@ module SocialLinker
     end
 
     # default summary accessor
+    # @params strip [true,false] if length needs to be stripped
     # @return String with summary
     def summary(strip = false)
       summ = @options[:summary] || @options[:description]
       strip ? strip_string(summ, 300) : summ
+    end
+
+    def summary= summary
+      @options[:summary] = summary
     end
 
     # default media accessor
@@ -308,8 +313,14 @@ module SocialLinker
       rv
     end
 
+    # Returns the description, or when not present the summary value
+    # @return String
     def description
       @options[:description] || @options[:summary]
+    end
+
+    def description= desc
+      @options[:description] = desc
     end
 
     # Turns the first two tags in to "tweetable" hash tags
