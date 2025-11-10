@@ -176,6 +176,10 @@ module SocialLinker
       @options[:media]
     end
 
+    def media= media
+      @options[:media] = media
+    end
+
     def filename_derived_image_type
       if media
         extension = media.to_s.split(".").last.downcase
@@ -196,11 +200,15 @@ module SocialLinker
     # default tags accessor
     # @return Array<String> with tags
     def tags
-      @options[:tags] || []
+      @options[:tags]&.compact || []
     end
 
     def hashtags
-      @options[:hashtags]
+      if @options[:hashtags]
+        @options[:hashtags]
+      elsif tags.any?
+        tags[0..1].collect { |a| camelize_tag_when_needed(a) }.join(",")
+      end
     end
 
     # puts quotes around a string
@@ -281,10 +289,7 @@ module SocialLinker
       options.select! { |k, v| !v.nil? }
       @options.merge!(options)
 
-      if @options[:tags]
-        @options[:tags].compact!
-        @options[:hashtags] = @options[:tags][0..1].collect { |a| camelize_tag_when_needed(a) }.join(",") if @options[:tags] && !@options[:hashtags]
-      end
+      options[:tags]
 
       # make sure urls are absolute
       @options[:url] = prefix_domain(@options[:url], @options[:domain])
